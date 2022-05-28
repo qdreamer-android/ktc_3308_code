@@ -1,0 +1,63 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'bugly'
+
+static def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
+android {
+    compileSdkVersion compileSdk_version
+
+    defaultConfig {
+        applicationId "com.qdreamer.ktc_check"
+        minSdkVersion minSdk_version
+        targetSdkVersion targetSdk_version
+        versionCode 1
+        versionName "1.0"
+
+        ndk {
+            abiFilters "armeabi", "arm64-v8a"
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                outputFileName = "app-v" + defaultConfig.versionName + "-" + releaseTime() + "-" + output.baseName + ".apk"
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+    dataBinding {
+        enabled true
+    }
+}
+
+dependencies {
+    implementation project(':uiFrame')
+    implementation project(':socket-client')
+    implementation project(':socket-server')
+    implementation files('libs/ant.jar')
+    implementation files('libs/qdreamer.jar')
+    kapt "org.permissionsdispatcher:permissionsdispatcher-processor:4.7.0"
+}

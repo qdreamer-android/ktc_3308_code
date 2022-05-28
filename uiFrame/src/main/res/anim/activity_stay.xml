@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Activity 转场动画的时候设置 exitAnim, 避免跳转黑屏. -->
+    <alpha
+        android:duration="300"
+        android:fromAlpha="1"
+        android:toAlpha="1" />
+</set>

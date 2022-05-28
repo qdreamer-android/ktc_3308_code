@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1693FD</color>
+    <color name="colorPrimaryDark">#1693FD</color>
+    <color name="colorAccent">#1693FD</color>
+    <color name="colorTransparent">#00000000</color>
+    <drawable name="drawableTransparent">@color/colorTransparent</drawable>
+    <color name="colorWhite">#FFFFFF</color>
+    <drawable name="drawableWhite">@color/colorWhite</drawable>
+    <color name="colorBlack">#000000</color>
+    <drawable name="drawableBlack">@color/colorBlack</drawable>
+    <color name="colorGray">#B3BBC8</color>
+    <drawable name="splash_screen">@color/colorWhite</drawable>
+</resources>

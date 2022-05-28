@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.pwong.uiframe.base.BaseViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/statusBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            android:background="@{viewModel.isBlackTitle ? @color/colorWhite : @color/colorPrimary}"
+            app:isShow="@{viewModel.showStatus}"
+            tools:background="@color/colorPrimary"
+            tools:layout_height="@dimen/dp_20" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@{viewModel.isBlackTitle ? @color/colorWhite : @color/colorPrimary}"
+            android:gravity="center"
+            app:contentInsetEnd="@dimen/dp_0"
+            app:contentInsetLeft="@dimen/dp_0"
+            app:contentInsetRight="@dimen/dp_0"
+            app:contentInsetStart="@dimen/dp_0"
+            app:contentInsetStartWithNavigation="@dimen/dp_0"
+            app:navigationIcon="@{viewModel.isBlackTitle ? @drawable/ic_back_black : @drawable/ic_back_white}"
+            app:subtitle=" "
+            app:subtitleTextColor="@color/colorTransparent"
+            app:title=" "
+            app:titleTextColor="@color/colorTransparent"
+            tools:background="@color/colorPrimary"
+            tools:navigationIcon="@drawable/ic_back_white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@{viewModel.title}"
+                android:textColor="@{viewModel.isBlackTitle ? @color/colorBlack : @color/colorWhite}"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold"
+                tools:text="标题"
+                tools:textColor="@color/colorWhite" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</layout>

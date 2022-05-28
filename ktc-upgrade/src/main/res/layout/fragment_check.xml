@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.qdreamer.ktc_upgrade.CheckFragmentViewModel" />
+
+        <variable
+            name="listener"
+            type="com.pwong.uiframe.listener.OnViewClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_20"
+        android:paddingBottom="@dimen/dp_20">
+
+        <RadioGroup
+            android:id="@+id/rgpMic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="@{viewModel.socketConnectSuccess &amp;&amp; !viewModel.isRecording}"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dp_24"
+            android:paddingEnd="@dimen/dp_24">
+
+            <RadioButton
+                android:id="@+id/rbtMic4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:text=" 4+1"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                tools:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbtMic6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:text=" 6+2"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/rbtMic8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:text=" 8+2"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+
+        </RadioGroup>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_weight="1"
+            android:scrollbarStyle="outsideInset">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.4"
+                android:paddingStart="@dimen/dp_24"
+                android:text="@{viewModel.checkResult}"
+                android:paddingEnd="@dimen/dp_24"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_14" />
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btnCheck"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginStart="@dimen/dp_24"
+            android:layout_marginEnd="@dimen/dp_24"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/selector_upgrade_button"
+            android:enabled="@{viewModel.socketConnectSuccess &amp;&amp; !viewModel.isRecording}"
+            android:letterSpacing="0.8"
+            android:onClick="@{(v) -> listener.onClick(v)}"
+            android:text="开始厂测"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</layout>

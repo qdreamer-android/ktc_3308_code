@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.qdreamer.ktc_upgrade.UpgradeFragmentViewModel" />
+
+        <variable
+            name="listener"
+            type="com.pwong.uiframe.listener.OnViewClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnVersion"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginStart="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_24"
+            android:background="@drawable/selector_upgrade_button"
+            android:enabled="@{viewModel.socketConnectSuccess}"
+            android:letterSpacing="0.8"
+            android:onClick="@{(v) -> listener.onClick(v)}"
+            android:text="获取版本号"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtUpgradeStorage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:paddingStart="@dimen/dp_24"
+            android:paddingTop="@dimen/dp_12"
+            android:paddingEnd="@dimen/dp_24"
+            android:paddingBottom="@dimen/dp_12"
+            android:text='@{"升级包存放目录：\n" + viewModel.upgradePkgPath}'
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_14"
+            tools:text="升级包存放目录：\n/sdcard/*****/***.zip" />
+
+        <Button
+            android:id="@+id/btnUpgrade"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginStart="@dimen/dp_24"
+            android:layout_marginEnd="@dimen/dp_24"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/selector_upgrade_button"
+            android:enabled="@{!viewModel.inUpgrade &amp;&amp; viewModel.socketConnectSuccess}"
+            android:letterSpacing="0.8"
+            android:onClick="@{(v) -> listener.onClick(v)}"
+            android:text="升级"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</layout>

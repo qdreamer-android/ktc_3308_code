@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.pwong.uiframe.base.BaseListViewModel" />
+
+        <variable
+            name="itemListener"
+            type="com.pwong.uiframe.listener.OnViewModelClickListener" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshActivity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:enabled="@{viewModel.refreshEnable &amp;&amp; viewModel.updateRefreshEnable}">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcyActivity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</layout>

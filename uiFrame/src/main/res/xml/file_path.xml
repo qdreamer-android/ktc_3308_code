@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!--    <root-path name="root" path="" />-->
+    <!-- /sdcard/${path} -->
+    <external-path
+        name="external"
+        path="." />
+    <!-- /data/data/packageName/files/${path} -->
+    <files-path
+        name="files"
+        path="." />
+    <!-- /data/data/packageName/cache/${path} -->
+    <cache-path
+        name="cache"
+        path="." />
+    <!-- /sdcard/Android/data/packageName/files/${path} -->
+    <external-files-path
+        name="external_file_path"
+        path="." />
+    <!-- /sdcard/Android/data/packageName/cache/${path} -->
+    <external-cache-path
+        name="external_cache_path"
+        path="." />
+</paths>

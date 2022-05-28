@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.pwong.uiframe.view.H5ViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/vStatusH5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            android:background="@color/colorPrimary"
+            tools:layout_height="@dimen/dp_20" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tlbH5"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            app:contentInsetEnd="@dimen/dp_0"
+            app:contentInsetLeft="@dimen/dp_0"
+            app:contentInsetRight="@dimen/dp_0"
+            app:contentInsetStart="@dimen/dp_0"
+            app:contentInsetStartWithNavigation="@dimen/dp_0"
+            app:navigationIcon="@drawable/ic_back_white"
+            app:subtitle=" "
+            app:subtitleTextColor="@color/colorTransparent"
+            app:title=" "
+            app:titleTextColor="@color/colorTransparent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:text="@{viewModel.webTitle}"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_18"
+                android:textStyle="bold"
+                app:isSelected="@{true}"
+                tools:text="标题" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <ProgressBar
+            android:id="@+id/pgbH5"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:maxHeight="@dimen/dp_1"
+            android:progress="@{viewModel.curProgress}"
+            android:progressDrawable="@drawable/bg_progress_h5"
+            app:isShow="@{viewModel.curProgress &gt; 90}"
+            tools:max="100"
+            tools:progress="30" />
+
+        <com.pwong.uiframe.widget.JWebView
+            android:id="@+id/wbvH5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite" />
+
+    </LinearLayout>
+
+</layout>
