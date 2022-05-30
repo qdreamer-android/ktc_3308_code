@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.qdreamer.ktc_upgrade.KtcUpgradeViewModel" />
+
+        <variable
+            name="listener"
+            type="com.pwong.uiframe.listener.OnViewClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".KtcUpgradeActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_36"
+                android:layout_marginStart="@dimen/dp_24"
+                android:layout_marginEnd="@dimen/dp_24"
+                android:background="@drawable/shape_round50_stroke1_primary"
+                android:enabled="@{!viewModel.isRecording}"
+                android:hint="请输入录音时长（单位 秒）"
+                android:inputType="number"
+                android:maxLength="3"
+                android:visibility="gone"
+                android:paddingStart="@dimen/dp_16"
+                android:paddingEnd="@dimen/dp_16"
+                android:singleLine="true"
+                android:text="@={viewModel.duration}"
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="#666666"
+                android:textSize="@dimen/sp_14" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_36"
+                android:layout_marginStart="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_24"
+                android:background="@drawable/shape_round50_stroke1_primary"
+                android:enabled="@{!viewModel.isRecording}"
+                android:hint="请输入录音 mic 数量"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingStart="@dimen/dp_16"
+                android:paddingEnd="@dimen/dp_16"
+                android:singleLine="true"
+                android:text="@={viewModel.channel}"
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="#666666"
+                android:textSize="@dimen/sp_14" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dp_24"
+            android:paddingEnd="@dimen/dp_24">
+
+            <Button
+                android:id="@+id/btnRecord"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_36"
+                android:layout_weight="1"
+                android:background="@drawable/selector_upgrade_button"
+                android:enabled="@{viewModel.socketConnectSuccess &amp;&amp; !viewModel.isRecording}"
+                android:onClick="@{(v) -> listener.onClick(v)}"
+                android:text="开始录音"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/btnVersion"
+                app:layout_constraintEnd_toStartOf="@+id/btnPlay"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/btnPlay"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_36"
+                android:layout_weight="1"
+                android:background="@drawable/selector_upgrade_button"
+                android:enabled="@{viewModel.socketConnectSuccess}"
+                android:onClick="@{(v) -> listener.onClick(v)}"
+                android:text='@{viewModel.isPlaying ? "停止播放" : "播放录音"}'
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/btnVersion"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btnRecord"
+                tools:text="播放录音" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnVersion"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginStart="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_24"
+            android:background="@drawable/selector_upgrade_button"
+            android:enabled="@{viewModel.socketConnectSuccess}"
+            android:letterSpacing="0.8"
+            android:onClick="@{(v) -> listener.onClick(v)}"
+            android:text="获取版本号"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtUpgradeStorage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_24"
+            android:paddingTop="@dimen/dp_12"
+            android:paddingEnd="@dimen/dp_24"
+            android:paddingBottom="@dimen/dp_12"
+            android:text='@{"升级包存放路径：\n" + viewModel.upgradePkgPath}'
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_14" />
+
+        <Button
+            android:id="@+id/btnUpgrade"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginStart="@dimen/dp_24"
+            android:layout_marginEnd="@dimen/dp_24"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/selector_upgrade_button"
+            android:enabled="@{!viewModel.inUpgrade &amp;&amp; viewModel.socketConnectSuccess}"
+            android:letterSpacing="0.8"
+            android:onClick="@{(v) -> listener.onClick(v)}"
+            android:text="升级"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</layout>

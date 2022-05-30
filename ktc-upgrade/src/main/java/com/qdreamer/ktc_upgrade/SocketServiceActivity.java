@@ -58,7 +58,7 @@ public abstract class SocketServiceActivity<DB extends ViewDataBinding, VM exten
     }
 
     protected void reconnectSocket() {
-        LogUtil.INSTANCE.logE(SOCKET_TAG, "-------------->>>>>>>>>>>>>> 开始重启服务 " + (mSocketManager != null) + " -- " + !mSocketManager.isLive());
+        LogUtil.INSTANCE.logE(SOCKET_TAG, "-------------->>>>>>>>>>>>>> 开始启动服务 ${mSocketManager?.isLive}");
         if (mSocketManager != null && !mSocketManager.isLive()) {
             mSocketManager.listen(options);
         }
