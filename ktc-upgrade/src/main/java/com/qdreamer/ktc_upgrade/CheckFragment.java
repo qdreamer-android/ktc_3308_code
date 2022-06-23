@@ -3,6 +3,7 @@ package com.qdreamer.ktc_upgrade;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.pwong.library.utils.FastClickUtil;
@@ -14,7 +15,6 @@ import com.pwong.uiframe.listener.OnViewClickListener;
 import com.pwong.uiframe.utils.ToastUtil;
 import com.qdreamer.ktc_upgrade.databinding.FragmentCheckBinding;
 import com.qdreamer.ktc_upgrade.serial.SerialPortPresenter;
-import com.xuhao.didi.socket.common.interfaces.utils.TextUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -244,7 +244,7 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
 
     public void appendCheckResult(String result) {
         if (!TextUtils.isEmpty(result)) {
-            if (android.text.TextUtils.isEmpty(getViewModel().checkResult.get())) {
+            if (TextUtils.isEmpty(getViewModel().checkResult.get())) {
                 getViewModel().checkResult.set(result);
             } else {
                 getViewModel().checkResult.set(getViewModel().checkResult.get() + "\n" + result);

@@ -3,6 +3,7 @@ package com.qdreamer.ktc_upgrade.serial;
 import android.util.Log;
 
 import com.pwong.library.utils.LogUtil;
+import com.pwong.library.utils.StorageUtil;
 import com.qdreamer.ktc_upgrade.HomeActivity;
 
 import java.io.File;
@@ -42,12 +43,21 @@ public class SerialPortUtil {
     public void openSerialPort(OnSerialReadContentListener listener) {
         mOnSerialReadContentListener = listener;
         try {
-            serialPort = new SerialPort(new File("/dev/ttyS3"), 115200, 0);
+            // 需要确保临时文件存在，
+            serialPort = new SerialPort(new File("/dev/ttyACM0"), 115200, 0);
+//            File deviceFile = new File(StorageUtil.INSTANCE.getCACHE_PATH_ROOT(), "serialPort.log");
+//            LogUtil.INSTANCE.logE("------------> " + deviceFile.getAbsolutePath());
+//            if (!deviceFile.exists() || !deviceFile.isFile()) {be
+//                deviceFile.createNewFile();
+//            }
+//            serialPort = new SerialPort(deviceFile, 115200, 0);
             //调用对象SerialPort方法，获取串口中"读和写"的数据流
             inputStream = serialPort.getInputStream();
             outputStream = serialPort.getOutputStream();
+            LogUtil.INSTANCE.logE("----> " + (inputStream == null) + " ------> " + (outputStream == null));
         } catch (IOException e) {
             e.printStackTrace();
+            LogUtil.INSTANCE.logE("-----------------------> " + e);
         }
         getSerialPort();
     }
@@ -134,7 +144,9 @@ public class SerialPortUtil {
                     readData = new byte[dataLen];
                 }
                 try {
+                    LogUtil.INSTANCE.logE("串口接收消息开始");
                     int size = inputStream.read(readData);
+                    LogUtil.INSTANCE.logE("串口接收消息开始 >>>>>> " + dataLen + " ----- " + size);
                     if (size > 0) {
                         if (dataLen == 0) {
                             byte[] prefix = Arrays.copyOfRange(readData, 0, PREFIX_DATA.length);
@@ -176,15 +188,17 @@ public class SerialPortUtil {
                     } else {
                         try {
                             Thread.sleep(10);
+                            LogUtil.INSTANCE.logE("串口接收消息休眠 --------");
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    LogUtil.INSTANCE.logE("串口接收消息异常 -------- " + e);
                 }
             }
-
+            LogUtil.INSTANCE.logE("串口接收消息结束？？？？？？？");
         }
     }
 

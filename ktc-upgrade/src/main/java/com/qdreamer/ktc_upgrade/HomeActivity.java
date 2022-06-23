@@ -54,8 +54,14 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
         getBinding().setListener(this);
         setNavigationIcon(null);
 //        initSocketManager(serverActionAdapter);
-        serialPortPresenter = new SerialPortPresenter(this);
+
+        HomeActivityPermissionsDispatcher.initSerialPortPresenterWithPermissionCheck(this);
         HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 1);
+    }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    public void initSerialPortPresenter() {
+        serialPortPresenter = new SerialPortPresenter(this);
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
@@ -95,6 +101,11 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
     public SerialPortPresenter getSerialPortPresenter() {
         return serialPortPresenter;
+    }
+
+    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    public void onSerialPortPermissionDenied() {
+        ToastUtil.INSTANCE.showLongToast(this, "没有存储权限，无法进行串口通信");
     }
 
     @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})

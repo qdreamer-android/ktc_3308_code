@@ -9,6 +9,20 @@ static def releaseTime() {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('../ktc3308.jks')
+            storePassword '123456'
+            keyAlias '3308'
+            keyPassword '123456'
+        }
+        release {
+            storeFile file('../ktc3308.jks')
+            storePassword '123456'
+            keyAlias '3308'
+            keyPassword '123456'
+        }
+    }
     compileSdkVersion compileSdk_version
 
     defaultConfig {
@@ -26,10 +40,12 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+            signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -51,12 +67,11 @@ android {
     dataBinding {
         enabled true
     }
+    ndkVersion "21.0.6113669" // "20.0.5594570"
 }
 
 dependencies {
     implementation project(':uiFrame')
-    implementation project(':socket-client')
-    implementation project(':socket-server')
     implementation files('libs/ant.jar')
     implementation files('libs/qdreamer.jar')
     kapt "org.permissionsdispatcher:permissionsdispatcher-processor:4.7.0"

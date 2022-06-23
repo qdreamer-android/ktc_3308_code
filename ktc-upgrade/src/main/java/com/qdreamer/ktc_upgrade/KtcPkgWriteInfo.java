@@ -1,8 +1,8 @@
 package com.qdreamer.ktc_upgrade;
 
 import com.pwong.library.utils.LogUtil;
-import com.xuhao.didi.core.iocore.interfaces.ISendable;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
  * @Create: 2022-05-23 17:40:08
  * @Email: bug@163.com
  */
-public class KtcPkgWriteInfo implements ISendable {
+public class KtcPkgWriteInfo implements Serializable {
 
     private static final byte[] PREFIX = "start".getBytes(StandardCharsets.UTF_8);
 
@@ -33,7 +33,6 @@ public class KtcPkgWriteInfo implements ISendable {
         this.data = data;
     }
 
-    @Override
     public byte[] parse() {
         byte[] body = data == null ? new byte[0] : data;
         int headerLength = 4;
