@@ -8,6 +8,7 @@ import com.pwong.uiframe.base.BaseFragment;
 import com.pwong.uiframe.listener.OnViewClickListener;
 import com.pwong.uiframe.utils.ToastUtil;
 import com.qdreamer.ktc_upgrade.databinding.FragmentUpgradeBinding;
+import com.qdreamer.ktc_upgrade.serial.SerialPortPresenter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,15 +21,13 @@ import java.io.IOException;
  * @Create: 2022-05-24 16:23:01
  * @Email: bug@163.com
  */
-public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, UpgradeFragmentViewModel>
-        implements ISocketConnectListener, OnViewClickListener {
+public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, UpgradeFragmentViewModel> implements OnViewClickListener {
 
     private static final int VERSION = 1;
     private static final int UPGRADE = 2;
     public static final String PKG_NAME = "3308_ota_packge.zip";
 
     private KtcUpgradeFragment() {
-
     }
 
     public static KtcUpgradeFragment newInstance() {
@@ -42,19 +41,11 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
 
     @Override
     protected void initView() {
-        if (getActivity() instanceof HomeActivity) {
-            getViewModel().socketConnectSuccess.set(((HomeActivity) getActivity()).getSocketConnected());
-        }
         getBinding().setListener(this);
 
         // Fragment 要初始化，Activity 中必定是申请了文件读写权限的
         String pkgPath = new File(StorageUtil.INSTANCE.getDirPathAfterMkdirs("upgrade"), PKG_NAME).getAbsolutePath();
         getViewModel().upgradePkgPath.set(pkgPath);
-    }
-
-    @Override
-    public void onConnectChange(boolean isConnect) {
-        getViewModel().socketConnectSuccess.set(isConnect);
     }
 
     @Override
@@ -69,7 +60,10 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
         switch (v.getId()) {
             case R.id.btnVersion: {
                 if (getActivity() instanceof HomeActivity) {
-                    ((HomeActivity) getActivity()).sendSocketMessage(new KtcPkgWriteInfo(VERSION));
+                    SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
+                    if (presenter != null) {
+                        presenter.sendSerialPortMessage(new KtcPkgWriteInfo(VERSION));
+                    }
                 }
             }
             break;
@@ -83,7 +77,10 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
                             inputStream = new FileInputStream(ktcPkgFile);
                             byte[] buffer = new byte[(int) ktcPkgFile.length()];
                             inputStream.read(buffer);
-                            ((HomeActivity) getActivity()).sendSocketMessage(new KtcPkgWriteInfo(UPGRADE, buffer));
+                            SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
+                            if (presenter != null) {
+                                presenter.sendSerialPortMessage(new KtcPkgWriteInfo(UPGRADE, buffer));
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                             ToastUtil.INSTANCE.showLongToast(getContext(), "升级失败");

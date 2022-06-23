@@ -12,7 +12,6 @@ import com.pwong.uiframe.base.FViewModel;
  */
 public class CheckFragmentViewModel extends FViewModel {
 
-    public ObservableBoolean socketConnectSuccess = new ObservableBoolean(false);
     public ObservableBoolean isRecording = new ObservableBoolean(false);
     public ObservableField<String> checkResult = new ObservableField<>();
 

@@ -1,7 +1,6 @@
 package com.qdreamer.ktc_upgrade;
 
 import android.Manifest;
-import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -12,20 +11,15 @@ import androidx.fragment.app.FragmentTransaction;
 import com.pwong.library.utils.FastClickUtil;
 import com.pwong.library.utils.JsonHelper;
 import com.pwong.library.utils.LogUtil;
-import com.pwong.library.utils.NetworkUtil;
+import com.pwong.uiframe.base.BaseActivity;
 import com.pwong.uiframe.listener.OnViewClickListener;
 import com.pwong.uiframe.utils.ToastUtil;
 import com.qdreamer.ktc_upgrade.databinding.ActivityHomeBinding;
-import com.xuhao.didi.core.iocore.interfaces.ISendable;
-import com.xuhao.didi.core.pojo.OriginalData;
-import com.xuhao.didi.socket.common.interfaces.common_interfacies.server.IClient;
-import com.xuhao.didi.socket.common.interfaces.common_interfacies.server.IClientIOCallback;
-import com.xuhao.didi.socket.common.interfaces.common_interfacies.server.IClientPool;
-import com.xuhao.didi.socket.common.interfaces.common_interfacies.server.IServerShutdown;
-import com.xuhao.didi.socket.server.action.ServerActionAdapter;
+import com.qdreamer.ktc_upgrade.serial.SerialPortPresenter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -39,11 +33,16 @@ import permissions.dispatcher.RuntimePermissions;
  * @Email: bug@163.com
  */
 @RuntimePermissions
-public class HomeActivity extends SocketServiceActivity<ActivityHomeBinding, HomeViewModel> implements OnViewClickListener, IClientIOCallback {
+public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewModel> implements OnViewClickListener {
+
+    public static final String SOCKET_TAG = "SOCKET";
+    public static final ByteOrder SOCKET_BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
 
     private Fragment mLastFragment;
     private KtcUpgradeFragment upgradeFragment;
     private CheckFragment checkFragment;
+
+    private SerialPortPresenter serialPortPresenter;
 
     @Override
     protected int layoutView() {
@@ -54,12 +53,9 @@ public class HomeActivity extends SocketServiceActivity<ActivityHomeBinding, Hom
     protected void initView() {
         getBinding().setListener(this);
         setNavigationIcon(null);
-        initSocketManager(serverActionAdapter);
+//        initSocketManager(serverActionAdapter);
+        serialPortPresenter = new SerialPortPresenter(this);
         HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 1);
-    }
-
-    public boolean getSocketConnected() {
-        return getViewModel().socketConnectSuccess.get();
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
@@ -78,7 +74,7 @@ public class HomeActivity extends SocketServiceActivity<ActivityHomeBinding, Hom
             getViewModel().getTitle().set("OTA 升级");
         } else if (index == 1) {
             if (checkFragment == null) {
-                checkFragment = CheckFragment.newInstance(getSocketConnected());
+                checkFragment = CheckFragment.newInstance();
                 transaction.add(R.id.frameContainer, checkFragment);
             } else {
                 transaction.show(checkFragment);
@@ -95,6 +91,10 @@ public class HomeActivity extends SocketServiceActivity<ActivityHomeBinding, Hom
         getViewModel().position.set(index);
         mLastFragment = fragment;
         transaction.commit();
+    }
+
+    public SerialPortPresenter getSerialPortPresenter() {
+        return serialPortPresenter;
     }
 
     @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
@@ -131,80 +131,8 @@ public class HomeActivity extends SocketServiceActivity<ActivityHomeBinding, Hom
         }
     }
 
-    private final ServerActionAdapter serverActionAdapter = new ServerActionAdapter() {
-        @Override
-        public void onServerListening(int serverPort) {
-            LogUtil.INSTANCE.logE(SOCKET_TAG, "onServerListening  >>>>> " + serverPort + " >>>>> " + isSocketServerLive());
-            runOnUiThread(() -> {
-                getViewModel().socketConnectSuccess.set(isSocketServerLive());
-                ToastUtil.INSTANCE.showLongToast(HomeActivity.this, "Socket 服务启动 " + (isSocketServerLive() ? "成功" : "失败"));
-                if (upgradeFragment != null) {
-                    upgradeFragment.onConnectChange(isSocketServerLive());
-                    if (!isSocketServerLive()) {
-                        upgradeFragment.showUpgradeResult("服务连接断开，请重新升级");
-                    }
-                }
-                if (checkFragment != null) {
-                    checkFragment.onConnectChange(isSocketServerLive());
-                    if (!isSocketServerLive()) {
-                        checkFragment.showRecordResult("服务连接断开，请重新录音");
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onClientConnected(IClient client, int serverPort, IClientPool clientPool) {
-            String host = TextUtils.isEmpty(client.getHostIp()) ? client.getHostName() : client.getHostIp();
-            LogUtil.INSTANCE.logE(SOCKET_TAG, host + " >>> 连接成功");
-            runOnUiThread(() -> {
-                ToastUtil.INSTANCE.showLongToast(HomeActivity.this, host + " >> 连接成功");
-            });
-            if (client != null) {
-                client.addIOCallback(HomeActivity.this);
-            }
-        }
-
-        @Override
-        public void onClientDisconnected(IClient client, int serverPort, IClientPool clientPool) {
-            String host = TextUtils.isEmpty(client.getHostIp()) ? client.getHostName() : client.getHostIp();
-            LogUtil.INSTANCE.logE(SOCKET_TAG, host + " >>> 连接断开");
-            runOnUiThread(() -> {
-                ToastUtil.INSTANCE.showLongToast(HomeActivity.this, host + " >> 连接断开");
-            });
-            if (client != null) {
-                client.removeIOCallback(HomeActivity.this);
-            }
-        }
-
-        @Override
-        public void onServerWillBeShutdown(int serverPort, IServerShutdown shutdown, IClientPool clientPool, Throwable throwable) {
-            LogUtil.INSTANCE.logE(SOCKET_TAG, "onServerWillBeShutdown  >>>>> " + serverPort + " >>>>> " + isSocketServerLive());
-            if (shutdown != null) {
-                shutdown.shutdown();
-            }
-        }
-
-        @Override
-        public void onServerAlreadyShutdown(int serverPort) {
-            LogUtil.INSTANCE.logE(SOCKET_TAG, "onServerAlreadyShutdown  >>>>> " + serverPort + " >>>>> " + isSocketServerLive());
-            runOnUiThread(() -> {
-                getViewModel().socketConnectSuccess.set(false);
-                ToastUtil.INSTANCE.showLongToast(HomeActivity.this, "Socket 服务停止");
-                if (upgradeFragment != null) {
-                    upgradeFragment.onConnectChange(false);
-                    upgradeFragment.showUpgradeResult("服务连接断开，请重新升级");
-                }
-                if (checkFragment != null) {
-                    checkFragment.onConnectChange(false);
-                    checkFragment.showRecordResult("服务连接断开，请重新录音");
-                }
-            });
-        }
-    };
-
-    private void parseRecMsg(String host, byte[] body) {
-        LogUtil.INSTANCE.logE(SOCKET_TAG, "接收到 " + host + " 的消息 >>>>> " + (body != null ? body.length : 0));
+    public void parseRecMsg(byte[] body) {
+        LogUtil.INSTANCE.logE(SOCKET_TAG, "接收消息 >>>>> " + (body != null ? body.length : 0));
         if (body != null) {
             String recMsg = new String(body, StandardCharsets.UTF_8);
             // type 6 不是 json 格式，后面追加了音频流数据
@@ -269,37 +197,9 @@ public class HomeActivity extends SocketServiceActivity<ActivityHomeBinding, Hom
     }
 
     @Override
-    public void onClientRead(OriginalData originalData, IClient client, IClientPool<IClient, String> clientPool) {
-        String host = TextUtils.isEmpty(client.getHostIp()) ? client.getHostName() : client.getHostIp();
-        parseRecMsg(host, originalData == null ? null : originalData.getBodyBytes());
-    }
-
-    @Override
-    public void onClientWrite(ISendable sendable, IClient client, IClientPool<IClient, String> clientPool) {
-    }
-
-    @Override
-    protected void onNetStateChange(@NotNull NetworkUtil.WifiStatus state) {
-        super.onNetStateChange(state);
-        LogUtil.INSTANCE.logI(SOCKET_TAG, "网络连接状态发生改变： " + state.name());
-        if (state != NetworkUtil.WifiStatus.NETWORK_NONE) {
-            reconnectSocket();
-        } else {
-            ToastUtil.INSTANCE.showLongToast(this, "网络连接断开，请检查网络");
-            disconnectSocket();
-            getViewModel().socketConnectSuccess.set(false);
-            if (upgradeFragment != null) {
-                upgradeFragment.onConnectChange(false);
-            }
-            if (checkFragment != null) {
-                checkFragment.onConnectChange(false);
-            }
-        }
-    }
-
-    @Override
     protected void onDestroy() {
-        disconnectSocket();
+//        disconnectSocket();
+        serialPortPresenter.disconnect();
         super.onDestroy();
     }
 }

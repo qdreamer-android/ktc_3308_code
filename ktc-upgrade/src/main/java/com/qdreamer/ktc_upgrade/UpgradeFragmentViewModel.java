@@ -12,7 +12,6 @@ import com.pwong.uiframe.base.FViewModel;
  */
 public class UpgradeFragmentViewModel extends FViewModel {
 
-    public ObservableBoolean socketConnectSuccess = new ObservableBoolean(false);
     public ObservableField<String> upgradePkgPath = new ObservableField<>();
     public ObservableBoolean inUpgrade = new ObservableBoolean(false);
 

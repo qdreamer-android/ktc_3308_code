@@ -43,7 +43,7 @@ public class CheckPresenter implements FactoryHelper.QdreamerArrayFactoryTestLis
         qSession.setQSessionCallback(new QSession.QSessionCallBack() {
             @Override
             public void errorCode(String s) {
-                LogUtil.INSTANCE.logE(SocketServiceActivity.SOCKET_TAG, "SDK error callback >>> " + s);
+                LogUtil.INSTANCE.logE(HomeActivity.SOCKET_TAG, "SDK error callback >>> " + s);
             }
         });
     }
@@ -106,7 +106,7 @@ public class CheckPresenter implements FactoryHelper.QdreamerArrayFactoryTestLis
         String channel = JsonHelper.INSTANCE.getJsonString(json, "channel");
         if (checkFragmentReference.get() != null) {
             String result = String.format(info, channel);
-            LogUtil.INSTANCE.logE(SocketServiceActivity.SOCKET_TAG, Thread.currentThread().getName() + " ------- " + result);
+            LogUtil.INSTANCE.logE(HomeActivity.SOCKET_TAG, Thread.currentThread().getName() + " ------- " + result);
             checkFragmentReference.get().appendCheckResult(result);
         }
     }

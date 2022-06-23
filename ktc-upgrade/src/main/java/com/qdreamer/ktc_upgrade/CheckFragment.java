@@ -13,6 +13,7 @@ import com.pwong.uiframe.base.BaseFragment;
 import com.pwong.uiframe.listener.OnViewClickListener;
 import com.pwong.uiframe.utils.ToastUtil;
 import com.qdreamer.ktc_upgrade.databinding.FragmentCheckBinding;
+import com.qdreamer.ktc_upgrade.serial.SerialPortPresenter;
 import com.xuhao.didi.socket.common.interfaces.utils.TextUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,8 +30,7 @@ import java.util.Map;
  * @Create: 2022-05-24 16:30:35
  * @Email: bug@163.com
  */
-public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragmentViewModel>
-        implements ISocketConnectListener, OnViewClickListener {
+public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragmentViewModel> implements OnViewClickListener {
 
     /**
      * 对应 4、6、8 麦的资源
@@ -57,7 +57,6 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
      */
     private static final Float RECORD_DURATION = 9F;
 
-    private static final String CONNECT = "connect";
     private MediaPlayer mediaPlayer;
 
     private CheckPresenter checkPresenter;
@@ -65,12 +64,8 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
     private CheckFragment() {
     }
 
-    public static CheckFragment newInstance(boolean isConnect) {
-        CheckFragment fragment = new CheckFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(CONNECT, isConnect);
-        fragment.setArguments(bundle);
-        return fragment;
+    public static CheckFragment newInstance() {
+        return new CheckFragment();
     }
 
     @Override
@@ -80,9 +75,6 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
 
     @Override
     protected void initView() {
-        if (getArguments() != null) {
-            getViewModel().socketConnectSuccess.set(getArguments().getBoolean(CONNECT, false));
-        }
         getBinding().setListener(this);
 
         checkPresenter = new CheckPresenter(this);
@@ -128,11 +120,6 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
     public void onFastClick(@NotNull View v) {
         switch (v.getId()) {
             case R.id.btnCheck: {
-//                getViewModel().checkResult.set("");
-//                String filePath = getContext().getFilesDir().getAbsolutePath() + File.separator + "qvoice" + File.separator + "3308_8_2mic_test.pcm";
-//                LogUtil.INSTANCE.logE(SocketServiceActivity.SOCKET_TAG, filePath);
-//                checkPresenter.startEngineCheck(new File(filePath));
-
                 getViewModel().checkResult.set("");
                 if (getActivity() instanceof HomeActivity && !getViewModel().isRecording.get()) {
                     int channel = getMicChannel();
@@ -143,7 +130,10 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
                             map.put("type", RECORD);
                             map.put("record_tm", RECORD_DURATION);
                             map.put("channel", channel);
-                            ((HomeActivity) getActivity()).sendSocketMessage(new KtcPkgWriteInfo(JsonHelper.INSTANCE.toJson(map)));
+                            SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
+                            if (presenter != null) {
+                                presenter.sendSerialPortMessage(new KtcPkgWriteInfo(JsonHelper.INSTANCE.toJson(map)));
+                            }
                         }
                     } catch (Exception e) {
                         ToastUtil.INSTANCE.showLongToast(getContext(), "开始录音失败");
@@ -166,11 +156,6 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
             default:
                 throw new InvalidParameterException("mic channel error");
         }
-    }
-
-    @Override
-    public void onConnectChange(boolean isConnect) {
-        getViewModel().socketConnectSuccess.set(isConnect);
     }
 
     public void recordStart() {
@@ -244,7 +229,7 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
             mediaPlayer.start();
         } catch (IOException e) {
             e.printStackTrace();
-            LogUtil.INSTANCE.logE(SocketServiceActivity.SOCKET_TAG, "音频播放失败");
+            LogUtil.INSTANCE.logE(HomeActivity.SOCKET_TAG, "音频播放失败");
         }
     }
 

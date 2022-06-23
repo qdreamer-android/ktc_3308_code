@@ -13,6 +13,8 @@ import java.nio.charset.StandardCharsets;
  */
 public class KtcPkgWriteInfo implements ISendable {
 
+    private static final byte[] PREFIX = "start".getBytes(StandardCharsets.UTF_8);
+
     private final String attachment;
     private final byte[] data;
 
@@ -36,9 +38,10 @@ public class KtcPkgWriteInfo implements ISendable {
         byte[] body = data == null ? new byte[0] : data;
         int headerLength = 4;
         byte[] bodyBody = attachment.getBytes(StandardCharsets.UTF_8);
-        LogUtil.INSTANCE.logE(SocketServiceActivity.SOCKET_TAG, "发送消息 >>>> " + attachment + " --- " + body.length);
-        ByteBuffer buffer = ByteBuffer.allocate(bodyBody.length + headerLength + body.length);
-        buffer.order(SocketServiceActivity.SOCKET_BYTE_ORDER);
+        LogUtil.INSTANCE.logE(HomeActivity.SOCKET_TAG, "发送消息 >>>> " + attachment + " --- " + body.length);
+        ByteBuffer buffer = ByteBuffer.allocate(PREFIX.length + headerLength + bodyBody.length + body.length);
+        buffer.order(HomeActivity.SOCKET_BYTE_ORDER);
+        buffer.put(PREFIX);
         buffer.putInt(body.length + bodyBody.length);
         buffer.put(bodyBody);
         buffer.put(body);
