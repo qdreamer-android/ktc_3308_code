@@ -8,7 +8,7 @@ buildscript {
 
     ext.compileSdk_version = 29
     ext.minSdk_version = 21
-    ext.targetSdk_version = 29
+    ext.targetSdk_version = 22
 
     repositories {
         google()
