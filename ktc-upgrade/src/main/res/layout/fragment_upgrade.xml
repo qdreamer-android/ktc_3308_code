@@ -20,6 +20,25 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/btnSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginStart="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_24"
+            android:background="@drawable/selector_upgrade_button"
+            android:enabled="@{!viewModel.inUpgrade &amp;&amp; !viewModel.switching}"
+            android:letterSpacing="0.8"
+            android:onClick="@{(v) -> listener.onClick(v)}"
+            android:paddingStart="@dimen/dp_56"
+            android:paddingEnd="@dimen/dp_56"
+            android:text='@{viewModel.algorithmSwitch ? "关闭算法" : "开启算法"}'
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            tools:text="开启算法" />
+
+        <Button
             android:id="@+id/btnVersion"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_36"
@@ -57,7 +76,7 @@
             android:layout_marginEnd="@dimen/dp_24"
             android:layout_marginBottom="@dimen/dp_20"
             android:background="@drawable/selector_upgrade_button"
-            android:enabled="@{!viewModel.inUpgrade}"
+            android:enabled="@{!viewModel.inUpgrade &amp;&amp; !viewModel.switching}"
             android:letterSpacing="0.8"
             android:onClick="@{(v) -> listener.onClick(v)}"
             android:text="升级"

@@ -166,9 +166,9 @@ public class SerialPortUtil {
     private class ReceiveThread extends Thread {
 
         /**
-         * 标识
+         * 标识;-1 表示等待 start,0 表示已经获取到 start
          */
-        private int dataLen = 0;
+        private int dataLen = -1;
 
         ByteBuffer allDataBuffer = null;
 
@@ -184,31 +184,54 @@ public class SerialPortUtil {
                     readData = new byte[dataLen];
                 }
                 try {
-                    LogUtil.INSTANCE.logE("串口接收消息开始");
                     int size = inputStream.read(readData);
                     if (size > 0) {
                         LogUtil.INSTANCE.logE("串口接收消息开始 >>>>>> " + dataLen + " -----> " + size);
-                        if (dataLen == 0) {
+                        if (dataLen < 0) {
                             byte[] prefix = Arrays.copyOfRange(readData, 0, PREFIX_DATA.length);
                             if (PREFIX.equals(new String(prefix, StandardCharsets.UTF_8))) {
-                                byte[] head = Arrays.copyOfRange(readData, PREFIX_DATA.length, PREFIX_DATA.length + 4);
-                                ByteBuffer byteBuffer = ByteBuffer.wrap(head);
-                                byteBuffer.order(HomeActivity.SOCKET_BYTE_ORDER);
-                                int bodyLen = byteBuffer.getInt();
-                                LogUtil.INSTANCE.logE("串口开始 --- 消息长度 >>>>>> " + bodyLen);
+                                LogUtil.INSTANCE.logE("串口接收消息开始 ------- 数据量是否满足 " + (size >= PREFIX_DATA.length + 4));
+                                if (size > PREFIX_DATA.length) {
+                                    byte[] head = Arrays.copyOfRange(readData, PREFIX_DATA.length, PREFIX_DATA.length + 4);
+                                    ByteBuffer byteBuffer = ByteBuffer.wrap(head);
+                                    byteBuffer.order(HomeActivity.SOCKET_BYTE_ORDER);
+                                    int bodyLen = byteBuffer.getInt();
+                                    LogUtil.INSTANCE.logE("-111111 串口开始 --- 消息长度 >>>>>> " + bodyLen);
 
-                                if (size >= PREFIX_DATA.length + 4 + bodyLen) {
-                                    byte[] bodyData = Arrays.copyOfRange(readData, PREFIX_DATA.length + 4, PREFIX_DATA.length + 4 + bodyLen);
-                                    if (mOnSerialReadContentListener != null) {
-                                        mOnSerialReadContentListener.onReadContent(bodyData);
+                                    if (size >= PREFIX_DATA.length + 4 + bodyLen) {
+                                        byte[] bodyData = Arrays.copyOfRange(readData, PREFIX_DATA.length + 4, PREFIX_DATA.length + 4 + bodyLen);
+                                        if (mOnSerialReadContentListener != null) {
+                                            mOnSerialReadContentListener.onReadContent(bodyData);
+                                        }
+                                    } else {
+                                        dataLen = PREFIX_DATA.length + 4 + bodyLen - size;
+                                        byte[] bodyData = Arrays.copyOfRange(readData, PREFIX_DATA.length + 4, size);
+                                        allDataBuffer = ByteBuffer.allocate(bodyLen);
+                                        allDataBuffer.order(HomeActivity.SOCKET_BYTE_ORDER);
+                                        allDataBuffer.put(bodyData);
                                     }
                                 } else {
-                                    dataLen = PREFIX_DATA.length + 4 + bodyLen - size;
-                                    byte[] bodyData = Arrays.copyOfRange(readData, PREFIX_DATA.length + 4, size);
-                                    allDataBuffer = ByteBuffer.allocate(bodyLen);
-                                    allDataBuffer.order(HomeActivity.SOCKET_BYTE_ORDER);
-                                    allDataBuffer.put(bodyData);
+                                    dataLen = 0;
                                 }
+                            }
+                        } else if (dataLen == 0) {
+                            byte[] head = Arrays.copyOfRange(readData, 0, 4);
+                            ByteBuffer byteBuffer = ByteBuffer.wrap(head);
+                            byteBuffer.order(HomeActivity.SOCKET_BYTE_ORDER);
+                            int bodyLen = byteBuffer.getInt();
+                            LogUtil.INSTANCE.logE("000000 串口开始 --- 消息长度 >>>>>> " + bodyLen);
+                            if (size >= 4 + bodyLen) {
+                                byte[] bodyData = Arrays.copyOfRange(readData, 4, 4 + bodyLen);
+                                if (mOnSerialReadContentListener != null) {
+                                    mOnSerialReadContentListener.onReadContent(bodyData);
+                                }
+                                dataLen = -1;
+                            } else {
+                                dataLen = 4 + bodyLen - size;
+                                byte[] bodyData = Arrays.copyOfRange(readData, 4, size);
+                                allDataBuffer = ByteBuffer.allocate(bodyLen);
+                                allDataBuffer.order(HomeActivity.SOCKET_BYTE_ORDER);
+                                allDataBuffer.put(bodyData);
                             }
                         } else {
                             if (size < dataLen) {
@@ -221,7 +244,7 @@ public class SerialPortUtil {
                                 if (mOnSerialReadContentListener != null) {
                                     mOnSerialReadContentListener.onReadContent(allDataBuffer.array());
                                 }
-                                dataLen = 0;
+                                dataLen = -1;
                                 allDataBuffer = null;
                             }
                         }

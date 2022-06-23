@@ -23,8 +23,10 @@ import java.io.IOException;
  */
 public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, UpgradeFragmentViewModel> implements OnViewClickListener {
 
-    private static final int VERSION = 1;
+    public static final int VERSION = 1;
     private static final int UPGRADE = 2;
+    private static final int ALGORITHM_OPEN = 3;
+    private static final int ALGORITHM_CLOSE = 4;
     public static final String PKG_NAME = "3308_ota_packge.zip";
 
     private KtcUpgradeFragment() {
@@ -58,6 +60,22 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
     @Override
     public void onFastClick(@NotNull View v) {
         switch (v.getId()) {
+            case R.id.btnSwitch: {
+                getViewModel().switching.set(true);
+                if (getActivity() instanceof HomeActivity) {
+                    SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
+                    if (presenter != null) {
+                        if (getViewModel().algorithmSwitch.get()) {  // 关闭
+                            presenter.sendSerialPortMessage(new KtcPkgWriteInfo(ALGORITHM_CLOSE));
+                        } else {    // 开启
+                            presenter.sendSerialPortMessage(new KtcPkgWriteInfo(ALGORITHM_OPEN));
+                        }
+                    } else {
+                        getViewModel().switching.set(false);
+                    }
+                }
+            }
+            break;
             case R.id.btnVersion: {
                 if (getActivity() instanceof HomeActivity) {
                     SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
@@ -81,6 +99,8 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
                                 SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
                                 if (presenter != null) {
                                     presenter.sendSerialPortMessage(new KtcPkgWriteInfo(UPGRADE, buffer));
+                                } else {
+                                    getViewModel().inUpgrade.set(false);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -102,6 +122,25 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
                 }
             }
             break;
+        }
+    }
+
+    public void dealAlgorithm(boolean success) {
+        if (success) {
+            getActivity().runOnUiThread(() -> {
+                getViewModel().switching.set(false);
+                getViewModel().algorithmSwitch.set(!getViewModel().algorithmSwitch.get());
+                ToastUtil.INSTANCE.showLongToast(getContext(), (getViewModel().algorithmSwitch.get() ? "开启" : "关闭") + "成功");
+            });
+        } else {
+            if (getViewModel().switching.get()) {
+                getActivity().runOnUiThread(() -> {
+                    getViewModel().switching.set(false);
+                    ToastUtil.INSTANCE.showLongToast(getContext(), (getViewModel().algorithmSwitch.get() ? "关闭" : "开启") + "失败");
+                });
+            } else {
+                showUpgradeResult("版本相同");
+            }
         }
     }
 

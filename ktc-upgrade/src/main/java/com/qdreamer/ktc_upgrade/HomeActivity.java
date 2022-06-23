@@ -44,6 +44,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
     private SerialPortPresenter serialPortPresenter;
 
+    private boolean isReady = false;
+
     @Override
     protected int layoutView() {
         return R.layout.activity_home;
@@ -56,12 +58,29 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 //        initSocketManager(serverActionAdapter);
 
         HomeActivityPermissionsDispatcher.initSerialPortPresenterWithPermissionCheck(this);
-        HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 0);
     }
 
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void initSerialPortPresenter() {
         serialPortPresenter = new SerialPortPresenter(this);
+
+        showLoading("加载串口组件中....", true, true);
+        new Thread(() -> {
+            while (!isReady) {
+                synchronized (this) {
+                    if (!isReady) {
+                        serialPortPresenter.sendSerialPortMessage(new KtcPkgWriteInfo(KtcUpgradeFragment.VERSION));
+                    } else {
+                        return;
+                    }
+                }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
@@ -103,11 +122,6 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
         return serialPortPresenter;
     }
 
-    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public void onSerialPortPermissionDenied() {
-        ToastUtil.INSTANCE.showLongToast(this, "没有存储权限，无法进行串口通信");
-    }
-
     @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void onPermissionDenied() {
         ToastUtil.INSTANCE.showLongToast(this, "没有权限哦，亲(づ￣3￣)づ╭❤～");
@@ -128,13 +142,16 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
     @Override
     public void onFastClick(@NotNull View v) {
+        if (!isReady) {
+            return;
+        }
         switch (v.getId()) {
             case R.id.linearUpgrade: {
                 HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 0);
             }
             break;
             case R.id.linearCheck: {
-                HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 1);
+                // HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 1);
             }
             break;
             default:
@@ -167,21 +184,35 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
                         }
                     }
                     break;
+                    case "0": {
+                        if (upgradeFragment != null) {
+                            upgradeFragment.dealAlgorithm(true);
+                        }
+                    }
+                    break;
                     case "1": {
                         if (upgradeFragment != null) {
                             upgradeFragment.showUpgradeResult("更新成功");
                         }
                     }
                     break;
-                    case "2": {
+                    case "2": { // 升级版本相同 / 开启关闭算法失败
                         if (upgradeFragment != null) {
-                            upgradeFragment.showUpgradeResult("版本相同");
+                            upgradeFragment.dealAlgorithm(false);
                         }
                     }
                     break;
                     case "3": {
                         runOnUiThread(() -> {
-                            ToastUtil.INSTANCE.showLongToast(HomeActivity.this, JsonHelper.INSTANCE.getJsonString(recMsg, "ver"));
+                            if (isReady) {
+                                ToastUtil.INSTANCE.showLongToast(HomeActivity.this, JsonHelper.INSTANCE.getJsonString(recMsg, "ver"));
+                            } else {
+                                synchronized (this) {
+                                    hideLoading();
+                                    isReady = true;
+                                    HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 0);
+                                }
+                            }
                         });
                     }
                     break;
