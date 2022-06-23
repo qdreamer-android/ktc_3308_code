@@ -219,11 +219,11 @@ public class FactoryHelper {
 	public boolean getResutAndStop() {
 		if (STATE == START_STATE) {
 			LogUtil.INSTANCE.logE(HomeActivity.SOCKET_TAG, "6666666666666666");
-			mFactoryEngine.feed(null, FeedType.QENGINE_FEED_END);
+			mFactoryEngine.feed(new byte[0], FeedType.QENGINE_FEED_END);
 			LogUtil.INSTANCE.logE(HomeActivity.SOCKET_TAG, "7777777777777777");
 			int reset = mFactoryEngine.reset();
 			STATE = STOP_STATE;
-			return reset == 0 ? true : false;
+			return reset == 0;
 		}
 		return false;
 	}

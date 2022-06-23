@@ -56,7 +56,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 //        initSocketManager(serverActionAdapter);
 
         HomeActivityPermissionsDispatcher.initSerialPortPresenterWithPermissionCheck(this);
-        HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 1);
+        HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 0);
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)

@@ -3,7 +3,6 @@ package com.qdreamer.ktc_upgrade.serial;
 import android.util.Log;
 
 import com.pwong.library.utils.LogUtil;
-import com.pwong.library.utils.StorageUtil;
 import com.qdreamer.ktc_upgrade.HomeActivity;
 
 import java.io.File;
@@ -44,8 +43,49 @@ public class SerialPortUtil {
         mOnSerialReadContentListener = listener;
         try {
             // 需要确保临时文件存在，
-            serialPort = new SerialPort(new File("/dev/ttyACM0"), 115200, 0);
 //            File deviceFile = new File(StorageUtil.INSTANCE.getCACHE_PATH_ROOT(), "serialPort.log");
+
+//            Process exec = Runtime.getRuntime().exec("ls /dev/ttyACM0");
+            // * 不行
+//            Process exec = Runtime.getRuntime().exec("ls /dev/ttyACM*");
+//            InputStream inputStream = null;
+//            try {
+//                exec.waitFor();
+//                inputStream = exec.getInputStream();
+//                int len;
+//                byte[] buffer = new byte[1024];
+//                byte[] allBuffer = new byte[0];
+//                while ((len = inputStream.read(buffer)) != -1) {
+//                    if (len < buffer.length) {
+//                        byte[] copyOfRange = Arrays.copyOfRange(buffer, 0, len);
+//                        byte[] tempBuffer = new byte[allBuffer.length + len];
+//                        System.arraycopy(allBuffer, 0, tempBuffer, 0, allBuffer.length);
+//                        System.arraycopy(copyOfRange, 0, tempBuffer, allBuffer.length, copyOfRange.length);
+//                        allBuffer = tempBuffer;
+//                    } else {
+//                        byte[] tempBuffer = new byte[allBuffer.length + buffer.length];
+//                        System.arraycopy(allBuffer, 0, tempBuffer, 0, allBuffer.length);
+//                        System.arraycopy(buffer, 0, tempBuffer, allBuffer.length, buffer.length);
+//                        allBuffer = tempBuffer;
+//                    }
+//                }
+//                String result = new String(allBuffer, StandardCharsets.UTF_8);
+//                LogUtil.INSTANCE.logE("--------->>>>>>>>>>>>> " + result + " <<<<<<<<");
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } finally {
+//                if (inputStream != null) {
+//                    inputStream.close();
+//                }
+//            }
+
+//            File deviceFile = new File("/dev/ttyACM0");
+            int count = 0;
+            File deviceFile;
+            while (!(deviceFile = new File("/dev/ttyACM" + count)).exists());
+
+            LogUtil.INSTANCE.logE("===== " + deviceFile.getAbsolutePath() + " ----- " + deviceFile.exists());
+            serialPort = new SerialPort(deviceFile, 115200, 0);
 //            LogUtil.INSTANCE.logE("------------> " + deviceFile.getAbsolutePath());
 //            if (!deviceFile.exists() || !deviceFile.isFile()) {be
 //                deviceFile.createNewFile();
@@ -146,8 +186,8 @@ public class SerialPortUtil {
                 try {
                     LogUtil.INSTANCE.logE("串口接收消息开始");
                     int size = inputStream.read(readData);
-                    LogUtil.INSTANCE.logE("串口接收消息开始 >>>>>> " + dataLen + " ----- " + size);
                     if (size > 0) {
+                        LogUtil.INSTANCE.logE("串口接收消息开始 >>>>>> " + dataLen + " -----> " + size);
                         if (dataLen == 0) {
                             byte[] prefix = Arrays.copyOfRange(readData, 0, PREFIX_DATA.length);
                             if (PREFIX.equals(new String(prefix, StandardCharsets.UTF_8))) {

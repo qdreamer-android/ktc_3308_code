@@ -72,28 +72,30 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
                     File ktcPkgFile = new File(getViewModel().upgradePkgPath.get());
                     if (ktcPkgFile.exists() && ktcPkgFile.isFile()) {
                         getViewModel().inUpgrade.set(true);
-                        FileInputStream inputStream = null;
-                        try {
-                            inputStream = new FileInputStream(ktcPkgFile);
-                            byte[] buffer = new byte[(int) ktcPkgFile.length()];
-                            inputStream.read(buffer);
-                            SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
-                            if (presenter != null) {
-                                presenter.sendSerialPortMessage(new KtcPkgWriteInfo(UPGRADE, buffer));
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            ToastUtil.INSTANCE.showLongToast(getContext(), "升级失败");
-                            getViewModel().inUpgrade.set(false);
-                        } finally {
-                            if (inputStream != null) {
-                                try {
-                                    inputStream.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                        new Thread(() -> {
+                            FileInputStream inputStream = null;
+                            try {
+                                inputStream = new FileInputStream(ktcPkgFile);
+                                byte[] buffer = new byte[(int) ktcPkgFile.length()];
+                                inputStream.read(buffer);
+                                SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
+                                if (presenter != null) {
+                                    presenter.sendSerialPortMessage(new KtcPkgWriteInfo(UPGRADE, buffer));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                ToastUtil.INSTANCE.showLongToast(getContext(), "升级失败");
+                                getViewModel().inUpgrade.set(false);
+                            } finally {
+                                if (inputStream != null) {
+                                    try {
+                                        inputStream.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
-                        }
+                        }).start();
                     } else {
                         ToastUtil.INSTANCE.showLongToast(getContext(), "升级包不存在");
                     }
