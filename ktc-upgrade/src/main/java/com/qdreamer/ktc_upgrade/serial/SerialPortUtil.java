@@ -172,25 +172,29 @@ public class SerialPortUtil {
 
         ByteBuffer allDataBuffer = null;
 
+        private int allSize = 0;
+
         @Override
         public void run() {
             super.run();
             //条件判断，只要条件为true，则一直执行这个线程
             while (inputStream != null) {
                 byte[] readData;
-                if (dataLen <= 0) {
-                    readData = new byte[1024];
-                } else {
-                    readData = new byte[dataLen];
-                }
+//                if (dataLen <= 0) {
+//                    readData = new byte[1024];
+//                } else {
+//                    readData = new byte[dataLen];
+//                }
+                readData = new byte[4096];
                 try {
                     int size = inputStream.read(readData);
                     if (size > 0) {
-                        LogUtil.INSTANCE.logE("串口接收消息开始 >>>>>> " + dataLen + " -----> " + size);
+                        LogUtil.INSTANCE.logE("串口接收消息开始 >>>>>> dataLen: " + dataLen + " -----> readLen: " + size);
                         if (dataLen < 0) {
                             byte[] prefix = Arrays.copyOfRange(readData, 0, PREFIX_DATA.length);
                             if (PREFIX.equals(new String(prefix, StandardCharsets.UTF_8))) {
-                                LogUtil.INSTANCE.logE("串口接收消息开始 ------- 数据量是否满足 " + (size >= PREFIX_DATA.length + 4));
+                                LogUtil.INSTANCE.logE("串口接收消息开始 ------- 数据量是否满足 " + (size >= PREFIX_DATA.length + 4) + " ----- 上次消息总包长： " + allSize);
+                                allSize = 0;
                                 if (size > PREFIX_DATA.length) {
                                     byte[] head = Arrays.copyOfRange(readData, PREFIX_DATA.length, PREFIX_DATA.length + 4);
                                     ByteBuffer byteBuffer = ByteBuffer.wrap(head);
@@ -203,12 +207,14 @@ public class SerialPortUtil {
                                         if (mOnSerialReadContentListener != null) {
                                             mOnSerialReadContentListener.onReadContent(bodyData);
                                         }
+                                        allSize += bodyData.length;
                                     } else {
                                         dataLen = PREFIX_DATA.length + 4 + bodyLen - size;
                                         byte[] bodyData = Arrays.copyOfRange(readData, PREFIX_DATA.length + 4, size);
                                         allDataBuffer = ByteBuffer.allocate(bodyLen);
                                         allDataBuffer.order(HomeActivity.SOCKET_BYTE_ORDER);
                                         allDataBuffer.put(bodyData);
+                                        allSize += size;
                                     }
                                 } else {
                                     dataLen = 0;
@@ -222,11 +228,13 @@ public class SerialPortUtil {
                             LogUtil.INSTANCE.logE("000000 串口开始 --- 消息长度 >>>>>> " + bodyLen);
                             if (size >= 4 + bodyLen) {
                                 byte[] bodyData = Arrays.copyOfRange(readData, 4, 4 + bodyLen);
+                                allSize += size;
                                 if (mOnSerialReadContentListener != null) {
                                     mOnSerialReadContentListener.onReadContent(bodyData);
                                 }
                                 dataLen = -1;
                             } else {
+                                allSize += size;
                                 dataLen = 4 + bodyLen - size;
                                 byte[] bodyData = Arrays.copyOfRange(readData, 4, size);
                                 allDataBuffer = ByteBuffer.allocate(bodyLen);
@@ -235,10 +243,12 @@ public class SerialPortUtil {
                             }
                         } else {
                             if (size < dataLen) {
+                                allSize += size;
                                 byte[] bodyData = Arrays.copyOfRange(readData, 0, size);
                                 allDataBuffer.put(bodyData);
                                 dataLen = dataLen - size;
                             } else {
+                                allSize += size;
                                 byte[] bodyData = Arrays.copyOfRange(readData, 0, dataLen);
                                 allDataBuffer.put(bodyData);
                                 if (mOnSerialReadContentListener != null) {
@@ -251,7 +261,6 @@ public class SerialPortUtil {
                     } else {
                         try {
                             Thread.sleep(10);
-                            LogUtil.INSTANCE.logE("串口接收消息休眠 --------");
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -261,7 +270,6 @@ public class SerialPortUtil {
                     LogUtil.INSTANCE.logE("串口接收消息异常 -------- " + e);
                 }
             }
-            LogUtil.INSTANCE.logE("串口接收消息结束？？？？？？？");
         }
     }
 

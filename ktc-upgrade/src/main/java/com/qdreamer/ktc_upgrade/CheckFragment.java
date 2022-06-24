@@ -55,7 +55,7 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
     /**
      * {@code VOICE} 音频时长为 8 秒，因此设置录音时长为 9 秒，稍微多点，确保声音录入进去
      */
-    private static final Float RECORD_DURATION = 9F;
+    private static final int RECORD_DURATION = 9;
 
     private MediaPlayer mediaPlayer;
 
