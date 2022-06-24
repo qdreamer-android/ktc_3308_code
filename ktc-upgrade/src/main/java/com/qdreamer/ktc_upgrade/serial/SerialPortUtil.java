@@ -180,25 +180,27 @@ public class SerialPortUtil {
 
         private int allSize = 0;
 
+        private int allDataNum = 0;
+
         @Override
         public void run() {
             super.run();
             //条件判断，只要条件为true，则一直执行这个线程
             while (inputStream != null) {
                 byte[] readData;
-//                if (dataLen <= 0) {
-//                    readData = new byte[1024];
-//                } else {
-//                    readData = new byte[dataLen];
-//                }
-                readData = new byte[4096];
+                if (dataLen <= 0) {
+                    readData = new byte[1024];
+                } else {
+                    readData = new byte[40960];
+                }
                 try {
                     int size = inputStream.read(readData);
                     if (size > 0) {
-                        LogUtil.INSTANCE.logE("串口接收消息开始 >>>>>> dataLen: " + dataLen + " -----> readLen: " + size);
+                        LogUtil.INSTANCE.logE("串口接收消息开始 >>>>>> dataLen: " + dataLen + " -----> readLen: " + size + " ----- " + allDataNum);
                         if (dataLen < 0) {
                             byte[] prefix = Arrays.copyOfRange(readData, 0, PREFIX_DATA.length);
                             if (PREFIX.equals(new String(prefix, StandardCharsets.UTF_8))) {
+                                allDataNum = 0;
                                 LogUtil.INSTANCE.logE("串口接收消息开始 ------- 数据量是否满足 " + (size >= PREFIX_DATA.length + 4) + " ----- 上次消息总包长： " + allSize);
                                 allSize = 0;
                                 if (size > PREFIX_DATA.length) {
@@ -248,6 +250,7 @@ public class SerialPortUtil {
                                 allDataBuffer.put(bodyData);
                             }
                         } else {
+                            LogUtil.INSTANCE.logE("===================== -------- " + allDataNum);
                             if (size < dataLen) {
                                 allSize += size;
                                 byte[] bodyData = Arrays.copyOfRange(readData, 0, size);
@@ -264,6 +267,7 @@ public class SerialPortUtil {
                                 allDataBuffer = null;
                             }
                         }
+                        allDataNum += size;
                     } else {
                         try {
                             Thread.sleep(10);

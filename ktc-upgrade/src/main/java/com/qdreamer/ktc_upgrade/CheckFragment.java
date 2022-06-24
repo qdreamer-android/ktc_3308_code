@@ -196,8 +196,8 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
                         }
                     });
 
-                    // 如果音频是一次性上来的，可以将这句代码放在音频结果回调中
-                    checkPresenter.startEngineCheck(AUDIO_FILE);
+//                    // 如果音频是一次性上来的，可以将这句代码放在音频结果回调中
+//                    checkPresenter.startEngineCheck(AUDIO_FILE);
                 }
             }
         }).start();
@@ -213,6 +213,9 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
                 }
             }
         }
+
+        // 如果音频是一次性上来的，可以将这句代码放在音频结果回调中
+        checkPresenter.startEngineCheck(AUDIO_FILE);
     }
 
     private void playBiuVoice() {
