@@ -1,6 +1,7 @@
 package com.qdreamer.ktc_upgrade;
 
 import android.Manifest;
+import android.os.Handler;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -57,7 +58,9 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
         setNavigationIcon(null);
 //        initSocketManager(serverActionAdapter);
 
-        HomeActivityPermissionsDispatcher.initSerialPortPresenterWithPermissionCheck(this);
+        new Handler().postDelayed(() -> {
+            HomeActivityPermissionsDispatcher.initSerialPortPresenterWithPermissionCheck(this);
+        }, 200);
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
@@ -151,7 +154,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
             }
             break;
             case R.id.linearCheck: {
-                // HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 1);
+                 HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 1);
             }
             break;
             default:
@@ -208,9 +211,9 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
                                 ToastUtil.INSTANCE.showLongToast(HomeActivity.this, JsonHelper.INSTANCE.getJsonString(recMsg, "ver"));
                             } else {
                                 synchronized (this) {
+                                    HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 0);
                                     hideLoading();
                                     isReady = true;
-                                    HomeActivityPermissionsDispatcher.switchPageWithPermissionCheck(this, 0);
                                 }
                             }
                         });
