@@ -31,7 +31,7 @@
             android:onClick="@{(v) -> listener.onClick(v)}"
             android:paddingStart="@dimen/dp_56"
             android:paddingEnd="@dimen/dp_56"
-            android:text='@{viewModel.algorithmSwitch ? "关闭算法" : "开启算法"}'
+            android:text="@{viewModel.algorithmSwitch ? @string/algorithmClose : @string/algorithmOpen}"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/sp_16"
             android:textStyle="bold"
@@ -61,7 +61,7 @@
             android:paddingTop="@dimen/dp_12"
             android:paddingEnd="@dimen/dp_24"
             android:paddingBottom="@dimen/dp_12"
-            android:text='@{"升级包存放目录：\n" + viewModel.upgradePkgPath}'
+            android:text="@{@string/upgrade_package_path + viewModel.upgradePkgPath}"
             android:textColor="#333333"
             android:textSize="@dimen/sp_14"
             tools:text="升级包存放目录：\n/sdcard/*****/***.zip" />

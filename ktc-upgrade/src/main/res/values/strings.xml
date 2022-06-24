@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ktc-upgrade</string>
+    <string name="algorithmClose">关闭算法</string>
+    <string name="algorithmOpen">开启算法</string>
+    <string name="upgrade_package_path">升级包存放目录：\n</string>
 </resources>
