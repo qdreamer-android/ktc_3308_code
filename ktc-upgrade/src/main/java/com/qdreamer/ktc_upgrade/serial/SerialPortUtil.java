@@ -82,7 +82,13 @@ public class SerialPortUtil {
 //            File deviceFile = new File("/dev/ttyACM0");
             int count = 0;
             File deviceFile;
-            while (!(deviceFile = new File("/dev/ttyACM" + count)).exists());
+            while (!(deviceFile = new File("/dev/ttyACM" + count)).exists()) {
+                count ++;
+                if (count > 100) {
+                    LogUtil.INSTANCE.logE("----------- 不存在 ttyACM0 - " + count);
+                    return;
+                }
+            }
 
             LogUtil.INSTANCE.logE("===== " + deviceFile.getAbsolutePath() + " ----- " + deviceFile.exists());
             serialPort = new SerialPort(deviceFile, 115200, 0);

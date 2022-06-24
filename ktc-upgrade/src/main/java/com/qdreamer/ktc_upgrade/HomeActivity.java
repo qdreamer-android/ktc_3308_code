@@ -65,9 +65,11 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void initSerialPortPresenter() {
+        LogUtil.INSTANCE.logE("------------> loading.......");
         serialPortPresenter = new SerialPortPresenter(this);
 
-        showLoading("加载串口组件中....", true, true);
+        showLoading("加载串口组件中....", false, false);
+        isReady = false;
         new Thread(() -> {
             while (!isReady) {
                 synchronized (this) {
@@ -127,6 +129,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
     @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void onPermissionDenied() {
+        LogUtil.INSTANCE.logE("------------> 白屏？？？？");
         ToastUtil.INSTANCE.showLongToast(this, "没有权限哦，亲(づ￣3￣)づ╭❤～");
     }
 
