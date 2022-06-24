@@ -13,10 +13,6 @@ import java.io.FileInputStream
 import java.util.*
 
 
-/**
- * @author android
- * @date 20-5-7
- */
 @SuppressLint("PrivateApi")
 fun Activity.initStatusBar() { // Android 7.0 以上去除灰色遮罩层
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

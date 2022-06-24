@@ -4,10 +4,6 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 
-/**
- * @author android
- * @date 20-5-5
- */
 open class BaseViewModel(
     title: String? = "",    // 标题
     showStatus: Boolean = true,

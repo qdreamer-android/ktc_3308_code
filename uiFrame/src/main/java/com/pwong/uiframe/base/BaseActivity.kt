@@ -17,7 +17,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import cn.dreamtobe.kpswitch.util.KeyboardUtil
 import com.pwong.library.broadcast.NetBroadcast
-import com.pwong.library.utils.LogUtil
 import com.pwong.library.utils.NetworkUtil
 import com.pwong.uiframe.BR
 import com.pwong.uiframe.R
@@ -36,10 +35,6 @@ import kotlinx.android.synthetic.main.abs_activity_base.*
 import kotlinx.android.synthetic.main.abs_page_container.*
 import java.util.concurrent.TimeUnit
 
-/**
- * @author android
- * @date 19-11-9
- */
 abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel> : AppCompatActivity(),
     DialogInterface.OnDismissListener{
 
@@ -171,7 +166,6 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel> : AppCompa
     }
 
     protected open fun onNetStateChange(state: NetworkUtil.WifiStatus) {
-        LogUtil.logI("network connect state changed:  ${this.javaClass.simpleName} -> $state")
     }
 
     protected fun showLoading(tips: String? = "正在加载中...", cancel: Boolean = true, dismissFinish: Boolean = false) {

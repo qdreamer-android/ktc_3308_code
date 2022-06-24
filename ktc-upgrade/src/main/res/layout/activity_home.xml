@@ -1,98 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.qdreamer.ktc_upgrade.HomeViewModel" />
-
-        <variable
-            name="listener"
-            type="com.pwong.uiframe.listener.OnViewClickListener" />
+            type="com.ktc.upgrade.HomeViewModel" />
     </data>
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/frameContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/frameContainer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:background="@color/colorGray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/linearUpgrade"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:onClick="@{(v) -> listener.onFastClick(v)}"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/dp_2"
-                android:paddingBottom="@dimen/dp_2">
-
-                <ImageView
-                    android:layout_width="@dimen/dp_22"
-                    android:layout_height="@dimen/dp_22"
-                    android:scaleType="centerCrop"
-                    android:src="@{viewModel.position == 0 ? @drawable/ic_upgrade_yes : @drawable/ic_upgrade_no}"
-                    tools:src="@drawable/ic_upgrade_yes" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_3"
-                    android:text="升级"
-                    android:textColor="@{viewModel.position == 0 ? @color/colorPrimary : @color/color8A8A8A}"
-                    android:textSize="@dimen/sp_8"
-                    tools:textColor="@color/color8A8A8A" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearCheck"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:onClick="@{(v) -> listener.onFastClick(v)}"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/dp_2"
-                android:paddingBottom="@dimen/dp_2">
-
-                <ImageView
-                    android:layout_width="@dimen/dp_22"
-                    android:layout_height="@dimen/dp_22"
-                    android:scaleType="centerCrop"
-                    android:src="@{viewModel.position == 1 ? @drawable/ic_check_yes : @drawable/ic_check_no}"
-                    tools:src="@drawable/ic_check_no" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_3"
-                    android:text="厂测"
-                    android:textColor="@{viewModel.position == 1 ? @color/colorPrimary : @color/color8A8A8A}"
-                    android:textSize="@dimen/sp_8"
-                    tools:textColor="@color/color8A8A8A" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
 </layout>

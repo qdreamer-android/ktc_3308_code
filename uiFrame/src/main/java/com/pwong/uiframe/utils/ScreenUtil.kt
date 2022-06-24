@@ -1,27 +1,9 @@
 package com.pwong.uiframe.utils
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.util.DisplayMetrics
 
-/**
- * @author android
- * @date 20-5-7
- */
 object ScreenUtil {
-
-    fun getScreenWidth(context: Context): Int {
-        val localDisplayMetrics = DisplayMetrics()
-        (context as Activity).windowManager.defaultDisplay.getMetrics(localDisplayMetrics)
-        return localDisplayMetrics.widthPixels
-    }
-
-    fun getScreenHeight(context: Context): Int {
-        val localDisplayMetrics = DisplayMetrics()
-        (context as Activity).windowManager.defaultDisplay.getMetrics(localDisplayMetrics)
-        return localDisplayMetrics.heightPixels - getStatusBarHeight(context)
-    }
 
     @SuppressLint("PrivateApi")
     fun getStatusBarHeight(context: Context): Int {

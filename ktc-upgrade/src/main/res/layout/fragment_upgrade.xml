@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.qdreamer.ktc_upgrade.UpgradeFragmentViewModel" />
+            type="com.ktc.upgrade.UpgradeFragmentViewModel" />
 
         <variable
             name="listener"
@@ -26,7 +26,6 @@
             android:layout_marginStart="@dimen/dp_24"
             android:layout_marginTop="@dimen/dp_20"
             android:layout_marginEnd="@dimen/dp_24"
-            android:background="@drawable/selector_upgrade_button"
             android:enabled="@{!viewModel.inUpgrade &amp;&amp; !viewModel.switching}"
             android:letterSpacing="0.8"
             android:onClick="@{(v) -> listener.onClick(v)}"
@@ -45,7 +44,6 @@
             android:layout_marginStart="@dimen/dp_24"
             android:layout_marginTop="@dimen/dp_20"
             android:layout_marginEnd="@dimen/dp_24"
-            android:background="@drawable/selector_upgrade_button"
             android:letterSpacing="0.8"
             android:onClick="@{(v) -> listener.onClick(v)}"
             android:text="获取版本号"
@@ -75,7 +73,6 @@
             android:layout_marginStart="@dimen/dp_24"
             android:layout_marginEnd="@dimen/dp_24"
             android:layout_marginBottom="@dimen/dp_20"
-            android:background="@drawable/selector_upgrade_button"
             android:enabled="@{!viewModel.inUpgrade &amp;&amp; !viewModel.switching}"
             android:letterSpacing="0.8"
             android:onClick="@{(v) -> listener.onClick(v)}"

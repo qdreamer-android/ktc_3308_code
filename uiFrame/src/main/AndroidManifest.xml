@@ -26,13 +26,6 @@
             android:name="android.max_aspect"
             android:value="2.4" />
 
-        <activity
-            android:name=".view.CrashActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.H5Activity"
-            android:screenOrientation="landscape" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"

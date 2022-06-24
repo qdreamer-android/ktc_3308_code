@@ -12,10 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.pwong.uiframe.BR
 import com.pwong.uiframe.utils.TUtil
 
-/**
- * @author android
- * @date 20-5-30
- */
 abstract class BaseFragment<DB : ViewDataBinding, VM : FViewModel> : Fragment() {
 
     private var mBinding: DB? = null
