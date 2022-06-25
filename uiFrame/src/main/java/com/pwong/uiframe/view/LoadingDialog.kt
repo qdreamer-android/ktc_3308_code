@@ -6,11 +6,6 @@ import com.pwong.uiframe.R
 import com.pwong.uiframe.base.BaseDialog
 import com.pwong.uiframe.databinding.DialogLoadingBinding
 
-/**
- * @author android
- * @date 20-5-7
- * @instruction fucking bugs
- */
 class LoadingDialog(context: Context, override val isFullWidth: Boolean = false) :
     BaseDialog<DialogLoadingBinding>(context, R.layout.dialog_loading) {
 

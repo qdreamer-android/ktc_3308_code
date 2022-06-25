@@ -6,11 +6,6 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-/**
- * @Author: Pen
- * @Create: 2022-05-23 17:40:08
- * @Email: bug@163.com
- */
 public class KtcPkgWriteInfo implements Serializable {
 
     private static final byte[] PREFIX = "start".getBytes(StandardCharsets.UTF_8);

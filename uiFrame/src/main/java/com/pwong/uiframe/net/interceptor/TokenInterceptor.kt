@@ -5,11 +5,6 @@ import com.pwong.uiframe.net.TokenCache
 import okhttp3.Interceptor
 import okhttp3.Response
 
-/**
- * @author android
- * @date 2020/7/7
- * @instruction fucking bugs
- */
 class TokenInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val req = chain.request()

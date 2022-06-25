@@ -6,11 +6,6 @@ import com.pwong.uiframe.base.BaseViewModel
 import com.pwong.uiframe.upgrade.OnDownloadListener
 import com.pwong.uiframe.upgrade.UpgradeHelper
 
-/**
- * @Author: Pen
- * @Create: 2022-01-05 17:19:34
- * @Email:  Rocking@7189.com
- */
 abstract class UpgradeActivity<DB : ViewDataBinding, VM : BaseViewModel> : BaseActivity<DB, VM>(
 ), OnDownloadListener {
 

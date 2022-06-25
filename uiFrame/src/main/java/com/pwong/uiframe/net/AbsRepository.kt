@@ -7,10 +7,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-/**
- * @author android
- * @date 19-10-6
- */
 open class AbsRepository {
 
     fun <T> subApi(observable: Observable<T>, callback: ApiCallback<T>? = null): Disposable {

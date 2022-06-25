@@ -12,10 +12,6 @@ import androidx.databinding.ViewDataBinding
 import com.pwong.uiframe.R
 
 
-/**
- * @author android
- * @date 2019/4/10
- */
 abstract class BaseDialog<DB : ViewDataBinding>(
     context: Context, @LayoutRes layoutId: Int,
     gravity: Int = Gravity.CENTER

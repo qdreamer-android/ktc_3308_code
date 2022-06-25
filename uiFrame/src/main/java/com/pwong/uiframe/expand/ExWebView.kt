@@ -7,11 +7,6 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import com.pwong.uiframe.base.AppWebViewClient
 
-/**
- * @author android
- * @date 20-5-29
- */
-
 @SuppressLint("SetJavaScriptEnabled")
 fun WebView.initWebSettings(mChromeClient: WebChromeClient? = null) {
     settings?.javaScriptEnabled = true

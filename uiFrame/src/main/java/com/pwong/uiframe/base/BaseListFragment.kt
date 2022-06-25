@@ -12,11 +12,6 @@ import com.pwong.uiframe.databinding.AbsFragmentListBinding
 import com.pwong.uiframe.listener.OnViewModelClickListener
 import kotlinx.android.synthetic.main.abs_fragment_list.*
 
-/**
- * @author android
- * @date 20-5-7
- * @instruction fucking bugs
- */
 abstract class BaseListFragment<itemDB : ViewDataBinding, VM : FListViewModel, ItemVM : IViewModel>
     : BaseFragment<AbsFragmentListBinding, VM>(), OnViewModelClickListener<ItemVM>,
     SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {

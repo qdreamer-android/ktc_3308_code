@@ -13,11 +13,6 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 
-/**
- * @Author: Pen
- * @Create: 2022-05-27 17:30:41
- * @Email: bug@163.com
- */
 public class CheckPresenter implements FactoryHelper.QdreamerArrayFactoryTestListener {
 
     private WeakReference<CheckFragment> checkFragmentReference;

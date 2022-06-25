@@ -6,12 +6,6 @@ import android.os.Build
 import android.util.AttributeSet
 import android.webkit.WebView
 
-/**
- * 避免有些平板设备 Android 5.1 崩溃
- *
- * @author android
- * @date 20-4-22
- */
 class JWebView : WebView {
 
     companion object {

@@ -2,11 +2,6 @@ package com.pwong.uiframe.utils
 
 import android.content.Context
 
-/**
- * @author android
- * @date 20-5-7
- * @instruction fucking bugs
- */
 object DensityUtil {
 
     fun dip2px(context: Context, dpValue: Float): Int {

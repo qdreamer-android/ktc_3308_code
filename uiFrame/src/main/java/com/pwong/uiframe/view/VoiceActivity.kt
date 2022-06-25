@@ -18,11 +18,6 @@ import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
 
-/**
- * @Author: Pen
- * @Create: 2022-01-04 11:57:43
- * @Email:  Rocking@7189.com
- */
 @RuntimePermissions
 abstract class VoiceActivity<DB : ViewDataBinding, VM : BaseViewModel> : BaseActivity<DB, VM>() {
 

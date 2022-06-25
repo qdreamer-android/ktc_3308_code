@@ -28,11 +28,6 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.RuntimePermissions;
 
-/**
- * @Author: Pen
- * @Create: 2022-05-24 16:04:30
- * @Email: bug@163.com
- */
 @RuntimePermissions
 public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewModel> implements OnViewClickListener {
 

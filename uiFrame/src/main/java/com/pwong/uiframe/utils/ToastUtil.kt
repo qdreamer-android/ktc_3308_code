@@ -6,11 +6,6 @@ import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
 
-/**
- * @author android
- * @date 20-5-7
- * @instruction fucking bugs
- */
 object ToastUtil {
 
     private var mToast: Toast? = null

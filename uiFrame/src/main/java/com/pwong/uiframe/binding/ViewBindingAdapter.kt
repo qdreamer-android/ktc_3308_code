@@ -3,10 +3,6 @@ package com.pwong.uiframe.binding
 import android.view.View
 import androidx.databinding.BindingAdapter
 
-/**
- * @author android
- * @date 2019/4/4
- */
 object ViewBindingAdapter {
 
     @BindingAdapter(value = ["isShow"], requireAll = false)

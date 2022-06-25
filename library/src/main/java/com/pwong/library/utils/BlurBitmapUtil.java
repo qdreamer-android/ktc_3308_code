@@ -9,10 +9,6 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 
-/**
- * @author android
- * @date 2019/03/09
- */
 public class BlurBitmapUtil {
 
     private static BlurBitmapUtil sInstance;

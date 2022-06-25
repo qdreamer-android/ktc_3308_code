@@ -8,11 +8,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.pwong.uiframe.BR
 import com.pwong.uiframe.listener.OnViewModelClickListener
 
-/**
- * @author android
- * @date 20-5-9
- * @instruction fucking bugs
- */
 abstract class BaseAdapter<DB : ViewDataBinding, VM : IViewModel>(layoutId: Int) :
     BaseQuickAdapter<VM, BaseViewHolder>(layoutId) {
 

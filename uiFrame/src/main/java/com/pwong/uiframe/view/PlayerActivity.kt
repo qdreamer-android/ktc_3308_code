@@ -5,13 +5,6 @@ import androidx.databinding.ViewDataBinding
 import com.pwong.uiframe.base.BaseViewModel
 import kotlinx.coroutines.*
 
-/**
- * 播放器 MediaPlayer, 一般 录音机用的多，而播放器和 AudioRecord 搭配使用，因此采用 MediaPlayer 直接继承自 VoiceActivity
- *
- * @Author: Pen
- * @Create: 2022-02-16 14:41:13
- * @Email:  Rocking@7189.com
- */
 abstract class PlayerActivity<DB : ViewDataBinding, VM : BaseViewModel> : VoiceActivity<DB, VM>(
 
 ), MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {

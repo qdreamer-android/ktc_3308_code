@@ -5,10 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.util.DisplayMetrics
 
-/**
- * @author android
- * @date 20-5-7
- */
 object ScreenUtil {
 
     fun getScreenWidth(context: Context): Int {

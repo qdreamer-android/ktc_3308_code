@@ -5,11 +5,6 @@ import android.content.Context
 import android.os.Process
 
 
-/**
- * @author android
- * @date 2020/6/3
- * @instruction fucking bugs
- */
 object ApplicationUtil {
 
     fun getCurrentProcessName(context: Context): String? {

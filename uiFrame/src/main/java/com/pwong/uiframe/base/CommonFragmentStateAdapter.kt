@@ -4,10 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
-/**
- * @author android
- * @date 2018/12/13
- */
 class CommonFragmentStateAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
     private val mFragments: MutableList<Fragment> = ArrayList()

@@ -1,9 +1,5 @@
 package com.pwong.library.utils
 
-/**
- * @author android
- * @date 20-5-2
- */
 object FastClickUtil {
     private var lastClickTime: Long = 0
     private const val INTERVAL = 500

@@ -7,10 +7,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 
 
-/**
- * @author android
- * @date 2019/4/9
- */
 object TextViewBindingAdapter {
 
 

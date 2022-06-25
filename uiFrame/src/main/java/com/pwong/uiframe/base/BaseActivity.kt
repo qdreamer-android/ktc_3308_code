@@ -36,10 +36,6 @@ import kotlinx.android.synthetic.main.abs_activity_base.*
 import kotlinx.android.synthetic.main.abs_page_container.*
 import java.util.concurrent.TimeUnit
 
-/**
- * @author android
- * @date 19-11-9
- */
 abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel> : AppCompatActivity(),
     DialogInterface.OnDismissListener{
 

@@ -12,11 +12,6 @@ import com.pwong.uiframe.databinding.AbsActivityListBinding
 import com.pwong.uiframe.listener.OnViewModelClickListener
 import kotlinx.android.synthetic.main.abs_activity_list.*
 
-/**
- * @author android
- * @date 20-5-7
- * @instruction fucking bugs
- */
 abstract class BaseListActivity<itemDB : ViewDataBinding, VM : BaseListViewModel, ItemVM : IViewModel>
     : BaseActivity<AbsActivityListBinding, VM>(), OnViewModelClickListener<ItemVM>
     , SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {

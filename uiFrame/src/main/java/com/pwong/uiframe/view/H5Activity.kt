@@ -11,10 +11,6 @@ import com.pwong.uiframe.expand.initWebSettings
 import com.pwong.uiframe.databinding.ActivityH5Binding
 import kotlinx.android.synthetic.main.activity_h5.*
 
-/**
- * @author android
- * @date 20-5-29
- */
 class H5Activity : BaseActivity<ActivityH5Binding, H5ViewModel>() {
 
     companion object {

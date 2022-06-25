@@ -16,11 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-/**
- * @Author: Pen
- * @Create: 2022-05-24 16:23:01
- * @Email: bug@163.com
- */
 public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, UpgradeFragmentViewModel> implements OnViewClickListener {
 
     public static final int VERSION = 1;

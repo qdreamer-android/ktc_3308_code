@@ -10,10 +10,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
 import java.security.MessageDigest;
 
-/**
- * @author android
- * @date 2019/03/09
- */
 public class GlideBlurTransformation extends CenterCrop {
     private Context context;
 

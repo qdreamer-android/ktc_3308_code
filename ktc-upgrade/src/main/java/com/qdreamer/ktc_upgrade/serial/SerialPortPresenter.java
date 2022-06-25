@@ -5,11 +5,6 @@ import com.qdreamer.ktc_upgrade.KtcPkgWriteInfo;
 
 import java.lang.ref.WeakReference;
 
-/**
- * @Author: Pen
- * @Create: 2022-06-23 09:17:32
- * @Email: hui.yin@qdreamer.com
- */
 public class SerialPortPresenter implements SerialPortUtil.OnSerialReadContentListener {
 
     private WeakReference<HomeActivity> weakReference;

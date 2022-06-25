@@ -5,11 +5,6 @@ import androidx.databinding.ObservableField;
 
 import com.pwong.uiframe.base.FViewModel;
 
-/**
- * @Author: Pen
- * @Create: 2022-05-24 16:24:07
- * @Email: bug@163.com
- */
 public class UpgradeFragmentViewModel extends FViewModel {
 
     public ObservableBoolean switching = new ObservableBoolean(false);

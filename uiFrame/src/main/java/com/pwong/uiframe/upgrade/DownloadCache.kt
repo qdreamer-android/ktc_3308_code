@@ -3,10 +3,6 @@ package com.pwong.uiframe.upgrade
 import android.content.Context
 import com.pwong.library.utils.SPUtils
 
-/**
- * @author android
- * @date 2020/6/1
- */
 object DownloadCache {
 
     private const val DOWNLOAD_ID = "downLoadId"

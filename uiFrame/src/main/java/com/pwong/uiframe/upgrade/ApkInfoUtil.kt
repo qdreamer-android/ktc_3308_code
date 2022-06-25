@@ -11,10 +11,6 @@ import com.pwong.library.utils.FileUtils
 import java.io.File
 
 
-/**
- * @author android
- * @date 2019/7/2
- */
 object ApkInfoUtil {
 
     fun startInstall(context: Context, uri: Uri) {

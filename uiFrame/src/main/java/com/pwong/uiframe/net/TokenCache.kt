@@ -5,10 +5,6 @@ import com.pwong.library.utils.SPUtils
 import com.pwong.uiframe.BuildConfig
 import java.lang.ref.WeakReference
 
-/**
- * @author android
- * @date 20-4-7
- */
 object TokenCache {
 
     private const val KEY_TOKEN = "${BuildConfig.LIBRARY_PACKAGE_NAME}_token"

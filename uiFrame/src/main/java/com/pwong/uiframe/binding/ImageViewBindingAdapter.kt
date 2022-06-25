@@ -8,10 +8,6 @@ import androidx.databinding.BindingAdapter
 import com.pwong.library.utils.ImgLoadUtil
 import com.pwong.uiframe.R
 
-/**
- * @author android
- * @date 2019/4/4
- */
 object ImageViewBindingAdapter {
 
     @BindingAdapter(value = ["avatar"], requireAll = false)

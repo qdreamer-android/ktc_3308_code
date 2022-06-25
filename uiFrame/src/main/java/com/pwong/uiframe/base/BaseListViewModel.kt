@@ -2,11 +2,6 @@ package com.pwong.uiframe.base
 
 import androidx.databinding.ObservableBoolean
 
-/**
- * @author android
- * @date 20-5-9
- * @instruction fucking bugs
- */
 open class BaseListViewModel(
     title: String? = "",    // 标题
     showStatus: Boolean = !title.isNullOrEmpty(),

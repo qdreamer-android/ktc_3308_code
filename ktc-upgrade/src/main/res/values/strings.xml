@@ -2,4 +2,7 @@
     <string name="app_name">ktc-upgrade</string>
     <string name="QDREAMER_APP_ID">66811472-2c09-11ec-b526-00163e13c8a2</string>
     <string name="QDREAMER_APP_KEY">8f44ba83-8e23-3157-b24d-82289644f43e</string>
+    <string name="algorithmClose">关闭算法</string>
+    <string name="algorithmOpen">开启算法</string>
+    <string name="upgrade_package_path">升级包存放目录：\n</string>
 </resources>

@@ -4,10 +4,6 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.system.exitProcess
 
-/**
- * @author android
- * @date 20-1-9
- */
 object CrashHandler : Thread.UncaughtExceptionHandler {
 
     private var mErrorListener: OnCrashListener? = null

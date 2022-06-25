@@ -3,10 +3,6 @@ package com.pwong.library.utils
 import android.content.Context
 import java.io.File
 
-/**
- * @author android
- * @date 20-5-5
- */
 object StorageUtil {
 
     var CACHE_PATH_ROOT = ""

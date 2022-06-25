@@ -9,10 +9,6 @@ import android.os.Environment
 import androidx.annotation.RequiresPermission
 import java.io.File
 
-/**
- * @author android
- * @date 2018/12/7
- */
 class AppDownloadManager(private val context: Context) {
 
     private val downloadManager: DownloadManager by lazy {

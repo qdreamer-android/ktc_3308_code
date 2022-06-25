@@ -6,10 +6,6 @@ import com.pwong.uiframe.R
 import com.pwong.uiframe.base.BaseActivity
 import com.pwong.uiframe.databinding.ActivityCrashBinding
 
-/**
- * @author android
- * @date 20-4-28
- */
 class CrashActivity : BaseActivity<ActivityCrashBinding, CrashViewModel>() {
 
     companion object {

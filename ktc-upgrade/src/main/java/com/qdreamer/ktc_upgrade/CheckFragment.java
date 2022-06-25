@@ -25,11 +25,6 @@ import java.security.InvalidParameterException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * @Author: Pen
- * @Create: 2022-05-24 16:30:35
- * @Email: bug@163.com
- */
 public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragmentViewModel> implements OnViewClickListener {
 
     /**

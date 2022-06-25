@@ -18,10 +18,6 @@ import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-/**
- * @author android
- * @date 2020/6/1
- */
 class UpgradeHelper(private val context: Context, private val autoUpgrade: Boolean = true) {
 
     private var mDownloadListener: OnDownloadListener? = null

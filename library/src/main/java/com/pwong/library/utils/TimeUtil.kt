@@ -4,10 +4,6 @@ import android.text.TextUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * @author android
- * @date 2019/2/15
- */
 object TimeUtil {
 
     const val TIME_FORMAT_DEFAULT = "yyyy-MM-dd HH:mm:ss"

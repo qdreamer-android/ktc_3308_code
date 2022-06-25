@@ -7,10 +7,6 @@ import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
 
-/**
- * @author android
- * @date 19-11-26
- */
 class NoSlideViewPager : ViewPager {
 
     var isCanSlide = false
