@@ -202,7 +202,12 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
                         }
                     }
                     break;
-                    case "2": { // 升级版本相同 / 开启关闭算法失败
+                    case "2": {
+                        if (upgradeFragment != null) {
+                            upgradeFragment.showUpgradeResult("版本相同");
+                        }
+                    }
+                    case "-2": {
                         if (upgradeFragment != null) {
                             upgradeFragment.dealAlgorithm(false);
                         }
