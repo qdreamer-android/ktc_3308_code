@@ -121,22 +121,16 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
     }
 
     public void dealAlgorithm(boolean success) {
-        if (success) {
-            getActivity().runOnUiThread(() -> {
+        getActivity().runOnUiThread(() -> {
+            if (success) {
                 getViewModel().switching.set(false);
                 getViewModel().algorithmSwitch.set(!getViewModel().algorithmSwitch.get());
                 ToastUtil.INSTANCE.showLongToast(getContext(), (getViewModel().algorithmSwitch.get() ? "开启" : "关闭") + "成功");
-            });
-        } else {
-            if (getViewModel().switching.get()) {
-                getActivity().runOnUiThread(() -> {
-                    getViewModel().switching.set(false);
-                    ToastUtil.INSTANCE.showLongToast(getContext(), (getViewModel().algorithmSwitch.get() ? "关闭" : "开启") + "失败");
-                });
             } else {
-                showUpgradeResult("版本相同");
+                getViewModel().switching.set(false);
+                ToastUtil.INSTANCE.showLongToast(getContext(), (getViewModel().algorithmSwitch.get() ? "关闭" : "开启") + "失败");
             }
-        }
+        });
     }
 
     public void showUpgradeResult(String result)  {
