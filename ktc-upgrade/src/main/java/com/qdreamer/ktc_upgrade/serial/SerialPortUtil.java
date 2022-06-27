@@ -182,17 +182,13 @@ public class SerialPortUtil {
 
         private int allDataNum = 0;
 
+        byte[] readData = new byte[2048];
+
         @Override
         public void run() {
             super.run();
             //条件判断，只要条件为true，则一直执行这个线程
             while (inputStream != null) {
-                byte[] readData;
-                if (dataLen <= 0) {
-                    readData = new byte[1024];
-                } else {
-                    readData = new byte[40960];
-                }
                 try {
                     int size = inputStream.read(readData);
                     if (size > 0) {

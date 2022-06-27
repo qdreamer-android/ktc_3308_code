@@ -42,7 +42,7 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
     /**
      * 之前出现过音量太高，播放 biu.wav 崩溃，可以考虑将音量设置成 X%
      */
-    private static final int VOICE_PERCENT = 100;
+    private static final int VOICE_PERCENT = 40;
 
     private static final File AUDIO_FILE = new File(StorageUtil.INSTANCE.getDirPathAfterMkdirs("audio"), "ktc_check.pcm");
     private FileOutputStream mAudioFile = null;
@@ -182,6 +182,11 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
                     Thread.sleep(10);
                 } catch (Exception ignore) {
                 }
+                if (getActivity() instanceof HomeActivity && !((HomeActivity) getActivity()).isLoadingShow() && System.currentTimeMillis() - recordStartTime > RECORD_DURATION * 1000L) {
+                    getActivity().runOnUiThread(() -> {
+                        ((HomeActivity) getActivity()).showLoading("传输音频中，请稍候...", false, false);
+                    });
+                }
                 // 多 2 秒 用于等待音频数据结果
                 if (System.currentTimeMillis() - recordStartTime > RECORD_DURATION * 1000L + 2 * 1000) {
                     getActivity().runOnUiThread(() -> {
@@ -199,6 +204,11 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
     }
 
     public void recordAudioData(byte[] audioData) {
+        if (getActivity() instanceof HomeActivity && ((HomeActivity) getActivity()).isLoadingShow()) {
+            getActivity().runOnUiThread(() -> {
+                ((HomeActivity)getActivity()).hideLoading();
+            });
+        }
         synchronized (CheckFragment.this) {
             if (mAudioFile != null) {
                 try {

@@ -170,7 +170,7 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel> : AppCompa
         LogUtil.logI("network connect state changed:  ${this.javaClass.simpleName} -> $state")
     }
 
-    protected fun showLoading(tips: String? = "正在加载中...", cancel: Boolean = true, dismissFinish: Boolean = false) {
+    fun showLoading(tips: String? = "正在加载中...", cancel: Boolean = true, dismissFinish: Boolean = false) {
         if (!isDestroyed) {
             mLoadingDialog.setLoadingDesc(tips ?: "")
             mLoadingDialog.setCanceledOnTouchBack(cancel)
@@ -183,7 +183,11 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel> : AppCompa
         }
     }
 
-    protected fun hideLoading() {
+    fun isLoadingShow(): Boolean {
+        return mLoadingDialog.isShowing
+    }
+
+    fun hideLoading() {
         mLoadingDialog.setOnDismissListener(null)
         if (mLoadingDialog.isShowing) {
             mLoadingDialog.cancel()
