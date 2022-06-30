@@ -17,6 +17,7 @@ import com.pwong.uiframe.listener.OnViewClickListener;
 import com.pwong.uiframe.utils.ToastUtil;
 import com.qdreamer.ktc_upgrade.databinding.ActivityHomeBinding;
 import com.qdreamer.ktc_upgrade.serial.SerialPortPresenter;
+import com.qdreamer.ktc_upgrade.usbhid.UsbHid;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +43,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
     private boolean isReady = false;
 
+    private UsbHid usbHid;
+
     @Override
     protected int layoutView() {
         return R.layout.activity_home;
@@ -60,15 +63,43 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void initSerialPortPresenter() {
-        LogUtil.INSTANCE.logE("------------> loading.......");
-        serialPortPresenter = new SerialPortPresenter(this);
+        usbHid = new UsbHid(this, 0x2207, 0x0019);
+        usbHid.setListener(new UsbHid.Listener() {
+            @Override
+            public void onNewData(@NotNull byte[] data) {
+                LogUtil.INSTANCE.logE("initSerialPortPresenter >> onNewData ------------- " + data.length);
+            }
 
+            @Override
+            public void onRunError(@NotNull Exception e) {
+                LogUtil.INSTANCE.logE("initSerialPortPresenter >> onRunError ------------- " + e);
+            }
+
+            @Override
+            public void onStateChanged(@NotNull UsbHid.State state) {
+                LogUtil.INSTANCE.logE("initSerialPortPresenter >> onStateChanged ------------- " + state.name());
+            }
+        });
+        usbHid.openDevice();
+
+//        loopSerialPortMsg();
+    }
+
+    private void sendUSBHidMsg() {
+
+    }
+
+    private void loopSerialPortMsg() {
+        LogUtil.INSTANCE.logE("------------> loading.......");
+        if (serialPortPresenter == null) {
+            serialPortPresenter = new SerialPortPresenter(this);
+        }
         showLoading("加载串口组件中....", false, false);
         isReady = false;
         new Thread(() -> {
-            while (!isReady) {
+            while (!isReady && serialPortPresenter != null) {
                 synchronized (this) {
-                    if (!isReady) {
+                    if (!isReady && serialPortPresenter != null) {
                         serialPortPresenter.sendSerialPortMessage(new KtcPkgWriteInfo(KtcUpgradeFragment.VERSION));
                     } else {
                         return;
@@ -202,6 +233,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
                             upgradeFragment.showUpgradeResult("版本相同");
                         }
                     }
+                    break;
                     case "-2": {
                         if (upgradeFragment != null) {
                             upgradeFragment.dealAlgorithm(false);
@@ -248,6 +280,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
     protected void onDestroy() {
 //        disconnectSocket();
         serialPortPresenter.disconnect();
+        serialPortPresenter = null;
+        usbHid.closeDevice();
         super.onDestroy();
     }
 }
