@@ -184,7 +184,7 @@ public class CheckFragment extends BaseFragment<FragmentCheckBinding, CheckFragm
                 }
                 if (getActivity() instanceof HomeActivity && !((HomeActivity) getActivity()).isLoadingShow() && System.currentTimeMillis() - recordStartTime > RECORD_DURATION * 1000L) {
                     getActivity().runOnUiThread(() -> {
-                        ((HomeActivity) getActivity()).showLoading("传输音频中，请稍候...", false, false);
+                        ((HomeActivity) getActivity()).showLoading("传输音频中...", false, false);
                     });
                 }
                 // 多 2 秒 用于等待音频数据结果

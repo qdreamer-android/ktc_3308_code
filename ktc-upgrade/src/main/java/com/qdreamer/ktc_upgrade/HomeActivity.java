@@ -77,16 +77,37 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
             @Override
             public void onStateChanged(@NotNull UsbHid.State state) {
-                LogUtil.INSTANCE.logE("initSerialPortPresenter >> onStateChanged ------------- " + state.name());
+                getBinding().tgBtnHID.setEnabled(state == UsbHid.State.Working);
+                if (state == UsbHid.State.Working) {
+                    ToastUtil.INSTANCE.showLongToast(HomeActivity.this, "USB HID 可用");
+                } else {
+                    ToastUtil.INSTANCE.showLongToast(HomeActivity.this, "USB HID 不可用，当前状态为 " + state.name());
+                }
             }
         });
         usbHid.openDevice();
 
-//        loopSerialPortMsg();
+        getBinding().tgBtnHID.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            sendUSBHidMsg(isChecked);
+        });
     }
 
-    private void sendUSBHidMsg() {
-
+    private synchronized void sendUSBHidMsg(boolean switchHID) {
+        if (switchHID) {
+            byte[] buffer = new byte[]{0x59, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+            LogUtil.INSTANCE.logE("开启 HID >>>>>>>>>>>>>>> " + buffer[0] + " >> " + buffer[1]);
+            usbHid.write(buffer, null);
+            loopSerialPortMsg();
+        } else {
+            byte[] buffer = new byte[]{0x59, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+            LogUtil.INSTANCE.logE("关闭 HID >>>>>>>>>>>>>>> " + buffer[0] + " >> " + buffer[1]);
+            usbHid.write(buffer, null);
+            if (serialPortPresenter != null) {
+                serialPortPresenter.disconnect();
+                serialPortPresenter = null;
+                isReady = false;
+            }
+        }
     }
 
     private void loopSerialPortMsg() {
@@ -99,6 +120,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
         new Thread(() -> {
             while (!isReady && serialPortPresenter != null) {
                 synchronized (this) {
+                    LogUtil.INSTANCE.logE("------------> loading....... " + !isReady + " ---- " + (serialPortPresenter != null));
                     if (!isReady && serialPortPresenter != null) {
                         serialPortPresenter.sendSerialPortMessage(new KtcPkgWriteInfo(KtcUpgradeFragment.VERSION));
                     } else {

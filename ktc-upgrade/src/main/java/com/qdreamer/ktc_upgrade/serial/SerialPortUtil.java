@@ -92,6 +92,7 @@ public class SerialPortUtil {
 
             LogUtil.INSTANCE.logE("===== " + deviceFile.getAbsolutePath() + " ----- " + deviceFile.exists());
             serialPort = new SerialPort(deviceFile, 115200, 0);
+//            serialPort = new SerialPort(deviceFile, 819200, 0);
 //            LogUtil.INSTANCE.logE("------------> " + deviceFile.getAbsolutePath());
 //            if (!deviceFile.exists() || !deviceFile.isFile()) {be
 //                deviceFile.createNewFile();
