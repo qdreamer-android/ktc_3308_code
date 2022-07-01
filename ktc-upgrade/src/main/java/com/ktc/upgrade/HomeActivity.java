@@ -2,6 +2,7 @@ package com.ktc.upgrade;
 
 import android.Manifest;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -10,9 +11,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.ktc.upgrade.databinding.ActivityHomeBinding;
 import com.ktc.upgrade.serial.SerialPortPresenter;
+import com.ktc.upgrade.usbhid.UsbHid;
 import com.pwong.library.utils.JsonHelper;
 import com.pwong.uiframe.base.BaseActivity;
 import com.pwong.uiframe.utils.ToastUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +28,6 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewModel> {
 
-    public static final String SOCKET_TAG = "SOCKET";
     public static final ByteOrder SOCKET_BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
 
     private Fragment mLastFragment;
@@ -33,6 +36,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
     private SerialPortPresenter serialPortPresenter;
 
     private boolean isReady = false;
+
+    private UsbHid usbHid;
 
     @Override
     protected boolean preInit() {
@@ -54,13 +59,61 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void initSerialPortPresenter() {
-        serialPortPresenter = new SerialPortPresenter(this);
+        usbHid = new UsbHid(this, 0x2207, 0x0019);
+        usbHid.setListener(new UsbHid.Listener() {
+            @Override
+            public void onNewData(@NotNull byte[] data) {
+//                Log.i(TAG, "initSerialPortPresenter >> onNewData ------------- " + data.length);
+            }
+
+            @Override
+            public void onRunError(@NotNull Exception e) {
+//                Log.i(TAG, "initSerialPortPresenter >> onRunError ------------- " + e);
+            }
+
+            @Override
+            public void onStateChanged(@NotNull UsbHid.State state) {
+                getBinding().tgBtnHID.setEnabled(state == UsbHid.State.Working);
+                if (state == UsbHid.State.Working) {
+                    ToastUtil.INSTANCE.showLongToast(HomeActivity.this, "USB HID 可用");
+                } else {
+                    ToastUtil.INSTANCE.showLongToast(HomeActivity.this, "USB HID 不可用，当前状态为 " + state.name());
+                }
+            }
+        });
+        usbHid.openDevice();
+
+        getBinding().tgBtnHID.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            sendUSBHidMsg(isChecked);
+        });
+    }
+
+    private synchronized void sendUSBHidMsg(boolean switchHID) {
+        if (switchHID) {
+            byte[] buffer = new byte[]{0x59, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+            usbHid.write(buffer, null);
+            loopSerialPortMsg();
+        } else {
+            byte[] buffer = new byte[]{0x59, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+            usbHid.write(buffer, null);
+            if (serialPortPresenter != null) {
+                serialPortPresenter.disconnect();
+                serialPortPresenter = null;
+                isReady = false;
+            }
+        }
+    }
+
+    private void loopSerialPortMsg() {
+        if (serialPortPresenter == null) {
+            serialPortPresenter = new SerialPortPresenter(this);
+        }
 
         showLoading("加载串口组件中....", true, true);
         new Thread(() -> {
-            while (!isReady) {
+            while (!isReady && serialPortPresenter != null) {
                 synchronized (this) {
-                    if (!isReady) {
+                    if (!isReady && serialPortPresenter != null) {
                         serialPortPresenter.sendSerialPortMessage(new KtcPkgWriteInfo(KtcUpgradeFragment.VERSION));
                     } else {
                         return;
@@ -185,7 +238,11 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding, HomeViewMode
 
     @Override
     protected void onDestroy() {
-        serialPortPresenter.disconnect();
+        if (serialPortPresenter != null) {
+            serialPortPresenter.disconnect();
+            serialPortPresenter = null;
+        }
+        usbHid.closeDevice();
         super.onDestroy();
     }
 }
