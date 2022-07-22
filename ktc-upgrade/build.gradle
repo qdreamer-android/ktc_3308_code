@@ -57,7 +57,7 @@ dependencies {
     implementation project(':uiFrame')
     implementation project(':socket-client')
     implementation project(':socket-server')
-    implementation files('libs/ant.jar')
-    implementation files('libs/qdreamer.jar')
+//    implementation files('libs/ant.jar')
+//    implementation files('libs/qdreamer.jar')
     kapt "org.permissionsdispatcher:permissionsdispatcher-processor:4.7.0"
 }
