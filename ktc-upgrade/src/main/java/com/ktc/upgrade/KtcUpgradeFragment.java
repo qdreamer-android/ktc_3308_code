@@ -24,6 +24,8 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
     private static final int ALGORITHM_CLOSE = 4;
     public static final String PKG_NAME = "3308_ota_packge.zip";
 
+    private boolean isOpenAlgorithm = false;
+
     private KtcUpgradeFragment() {
     }
 
@@ -55,16 +57,26 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
     @Override
     public void onFastClick(@NotNull View v) {
         switch (v.getId()) {
-            case R.id.btnSwitch: {
-                getViewModel().switching.set(true);
-                if (getActivity() instanceof HomeActivity) {
+            case R.id.btnAlgorithmClose: {
+                if (!getViewModel().switching.get() && getActivity() instanceof HomeActivity) {
+                    getViewModel().switching.set(true);
                     SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
                     if (presenter != null) {
-                        if (getViewModel().algorithmSwitch.get()) {  // 关闭
-                            presenter.sendSerialPortMessage(new KtcPkgWriteInfo(ALGORITHM_CLOSE));
-                        } else {    // 开启
-                            presenter.sendSerialPortMessage(new KtcPkgWriteInfo(ALGORITHM_OPEN));
-                        }
+                        isOpenAlgorithm = false;
+                        presenter.sendSerialPortMessage(new KtcPkgWriteInfo(ALGORITHM_CLOSE));
+                    } else {
+                        getViewModel().switching.set(false);
+                    }
+                }
+            }
+            break;
+            case R.id.btnAlgorithmOpen: {
+                if (!getViewModel().switching.get() && getActivity() instanceof HomeActivity) {
+                    getViewModel().switching.set(true);
+                    SerialPortPresenter presenter = ((HomeActivity) getActivity()).getSerialPortPresenter();
+                    if (presenter != null) {
+                        isOpenAlgorithm = true;
+                        presenter.sendSerialPortMessage(new KtcPkgWriteInfo(ALGORITHM_OPEN));
                     } else {
                         getViewModel().switching.set(false);
                     }
@@ -124,11 +136,10 @@ public class KtcUpgradeFragment extends BaseFragment<FragmentUpgradeBinding, Upg
         getActivity().runOnUiThread(() -> {
             if (success) {
                 getViewModel().switching.set(false);
-                getViewModel().algorithmSwitch.set(!getViewModel().algorithmSwitch.get());
-                ToastUtil.INSTANCE.showLongToast(getContext(), (getViewModel().algorithmSwitch.get() ? "开启" : "关闭") + "成功");
+                ToastUtil.INSTANCE.showLongToast(getContext(), (isOpenAlgorithm ? "开启" : "关闭") + "成功");
             } else {
                 getViewModel().switching.set(false);
-                ToastUtil.INSTANCE.showLongToast(getContext(), (getViewModel().algorithmSwitch.get() ? "关闭" : "开启") + "失败");
+                ToastUtil.INSTANCE.showLongToast(getContext(), (isOpenAlgorithm ? "开启" : "关闭") + "失败");
             }
         });
     }
