@@ -19,24 +19,43 @@
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnSwitch"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_36"
-            android:layout_marginStart="@dimen/dp_24"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
-            android:layout_marginEnd="@dimen/dp_24"
-            android:background="@drawable/selector_upgrade_button"
-            android:enabled="@{!viewModel.inUpgrade &amp;&amp; !viewModel.switching}"
-            android:letterSpacing="0.8"
-            android:onClick="@{(v) -> listener.onClick(v)}"
-            android:paddingStart="@dimen/dp_56"
-            android:paddingEnd="@dimen/dp_56"
-            android:text="@{viewModel.algorithmSwitch ? @string/algorithmClose : @string/algorithmOpen}"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/sp_16"
-            android:textStyle="bold"
-            tools:text="开启算法" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnAlgorithmOpen"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="@dimen/dp_36"
+                android:layout_marginStart="@dimen/dp_24"
+                android:layout_marginEnd="@dimen/dp_24"
+                android:layout_weight="1"
+                android:background="@drawable/selector_upgrade_button"
+                android:enabled="@{!viewModel.inUpgrade &amp;&amp; !viewModel.switching}"
+                android:onClick="@{(v) -> listener.onClick(v)}"
+                android:text="@string/algorithmOpen"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnAlgorithmClose"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="@dimen/dp_36"
+                android:layout_marginStart="@dimen/dp_24"
+                android:layout_marginEnd="@dimen/dp_24"
+                android:layout_weight="1"
+                android:background="@drawable/selector_upgrade_button"
+                android:enabled="@{!viewModel.inUpgrade &amp;&amp; !viewModel.switching}"
+                android:onClick="@{(v) -> listener.onClick(v)}"
+                android:text="@string/algorithmClose"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnVersion"

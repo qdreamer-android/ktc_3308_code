@@ -53,7 +53,7 @@ android {
         variant.outputs.all { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                outputFileName = "app-v" + defaultConfig.versionName + "-" + releaseTime() + "-" + output.baseName + ".apk"
+                outputFileName = "ktc-usb-hid-厂测-v" + defaultConfig.versionName + "-" + releaseTime() + "-" + output.baseName + ".apk"
             }
         }
     }
